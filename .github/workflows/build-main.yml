@@ -1,0 +1,72 @@
+---
+name: Main CI/CD pipeline
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+
+  build-main:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java: [
+          { 'version': '8', 'source': 'releases', opts: '' },
+          { 'version': '11', 'source': 'releases', opts: '' },
+          { 'version': '15', 'source': 'releases', opts: '' },
+          { 'version': '16', 'source': 'releases', 'opts': '' }
+        ]
+    name: Build with Java ${{ matrix.java.version }} (OpenJDK)
+    steps:
+      - uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: maven-java-${{ matrix.java.version }}
+      - uses: actions/checkout@v2
+      - uses: AdoptOpenJDK/install-jdk@v1
+        with:
+          version: ${{ matrix.java.version }}
+          source: ${{ matrix.java.source }}
+      - name: Build with Maven
+        env:
+          MAVEN_OPTS: ${{ matrix.java.opts }}
+        run: mvn -s .github/maven-ci-settings.xml -B clean verify
+
+  snapshot:
+    needs: build-main
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: maven-11
+      - uses: actions/checkout@v2
+      - name: Install JDK 11
+        uses: AdoptOpenJDK/install-jdk@v1
+        with:
+          version: 11
+      - name: Deploy snapshots
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SECRET_FILES_PASSPHRASE: ${{ secrets.SECRET_FILES_PASSPHRASE }}
+        run: |
+          .github/scripts/decrypt-secrets.sh
+          .github/scripts/deploy-snapshot.sh
+
+  compatibility:
+    runs-on: ubuntu-latest
+    name: Compatibility Check
+    steps:
+      - uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: maven-java-11
+      - uses: actions/checkout@v2
+      - name: Install JDK 11 (OpenJDK)
+        uses: AdoptOpenJDK/install-jdk@v1
+        with:
+          version: 11
+          source: releases
+      - name: Compatibility Check
+        run: mvn -s .github/maven-ci-settings.xml -B install revapi:check@check-compatibility -DskipTests -fae
