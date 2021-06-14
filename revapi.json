@@ -1,0 +1,63 @@
+[
+  {
+    "extension": "revapi.java",
+    "id": "java",
+    "configuration": {
+      "missing-classes": {
+        "behavior": "report",
+        "ignoreMissingAnnotations": false
+      }
+    },
+    "filter": {
+      "packages": {
+        "regex": false,
+        "include": [
+          "mutiny.zero"
+        ],
+        "exclude": [
+          "mutiny.zero.internal"
+        ]
+      }
+    }
+  },
+  {
+    "extension": "revapi.differences",
+    "id": "breaking-changes",
+    "configuration": {
+      "criticality": "highlight",
+      "minSeverity": "POTENTIALLY_BREAKING",
+      "minCriticality": "documented",
+      "differences": [
+        {
+          "ignore": true,
+          "code": "java.class.externalClassExposedInAPI",
+          "new": "interface org.reactivestreams.Publisher<T>",
+          "justification": "This is intended by design"
+        },
+        {
+          "ignore": true,
+          "code": "java.class.externalClassExposedInAPI",
+          "new": "interface org.reactivestreams.Subscriber<T>",
+          "justification": "This is intended by design"
+        },
+        {
+          "ignore": true,
+          "code": "java.class.externalClassExposedInAPI",
+          "new": "interface org.reactivestreams.Subscription",
+          "justification": "This is intended by design"
+        }
+      ]
+    }
+  },
+  {
+    "extension": "revapi.reporter.json",
+    "configuration": {
+      "minSeverity": "POTENTIALLY_BREAKING",
+      "minCriticality": "documented",
+      "output": "target/compatibility.json",
+      "indent": true,
+      "append": false,
+      "keepEmptyFile": true
+    }
+  }
+]
