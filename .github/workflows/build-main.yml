@@ -32,7 +32,8 @@ jobs:
           MAVEN_OPTS: ${{ matrix.java.opts }}
         run: mvn -s .github/maven-ci-settings.xml -B clean verify
 
-  snapshot:
+  deploy:
+    name: Deployment
     needs: build-main
     runs-on: ubuntu-latest
     steps:
@@ -45,13 +46,13 @@ jobs:
         uses: AdoptOpenJDK/install-jdk@v1
         with:
           version: 11
-      - name: Deploy snapshots
+      - name: Deploy
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SECRET_FILES_PASSPHRASE: ${{ secrets.SECRET_FILES_PASSPHRASE }}
+          SECRET_PASSPHRASE: ${{ secrets.SECRET_PASSPHRASE }}
         run: |
           .github/scripts/decrypt-secrets.sh
-          .github/scripts/deploy-snapshot.sh
+          .github/scripts/deploy.sh
 
   compatibility:
     runs-on: ubuntu-latest
