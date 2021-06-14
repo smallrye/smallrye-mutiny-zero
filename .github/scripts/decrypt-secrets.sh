@@ -6,4 +6,4 @@ gpg --quiet --batch --yes --decrypt --passphrase="${SECRET_FILES_PASSPHRASE}" \
 
 echo "Decrypting Maven settings"
 gpg --quiet --batch --yes --decrypt --passphrase="${SECRET_FILES_PASSPHRASE}" \
-    --output maven-settings.xml github/encrypted/maven-settings.xml.gpg
+    --output maven-settings.xml .github/encrypted/maven-settings.xml.gpg
