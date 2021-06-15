@@ -1,9 +1,9 @@
 package docsamples;
 
-import org.reactivestreams.Publisher;
-
 import static java.util.concurrent.CompletableFuture.supplyAsync;
 import static mutiny.zero.ZeroPublisher.fromCompletionStage;
+
+import org.reactivestreams.Publisher;
 
 public class FromCompletionStage {
 

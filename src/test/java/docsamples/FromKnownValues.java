@@ -1,11 +1,11 @@
 package docsamples;
 
-import org.reactivestreams.Publisher;
+import static mutiny.zero.ZeroPublisher.*;
 
 import java.io.IOException;
 import java.util.Arrays;
 
-import static mutiny.zero.ZeroPublisher.*;
+import org.reactivestreams.Publisher;
 
 public class FromKnownValues {
 
