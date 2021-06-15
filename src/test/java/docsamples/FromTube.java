@@ -1,9 +1,10 @@
 package docsamples;
 
-import mutiny.zero.BackpressureStrategy;
+import static mutiny.zero.ZeroPublisher.create;
+
 import org.reactivestreams.Publisher;
 
-import static mutiny.zero.ZeroPublisher.create;
+import mutiny.zero.BackpressureStrategy;
 
 public class FromTube {
 
