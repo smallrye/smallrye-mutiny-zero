@@ -1,6 +1,8 @@
 # Overview
 
-Mutiny Zero is a minimal API for creating [reactive-streams](https://www.reactive-streams.org) compliant publishers.
+Mutiny Zero is a minimal API for creating [reactive streams](https://www.reactive-streams.org) compliant publishers.
+
+It weights less than 50K and has 0 external dependency beyond the _reactive streams_ API (or [Java Flow](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/Flow.html)).
 
 ## What are reactive streams?
 
