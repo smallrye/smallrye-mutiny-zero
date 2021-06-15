@@ -41,6 +41,8 @@ Developing reactive streams compliant libraries is difficult, so vendors have be
 All of these libraries have ways to create publishers from different eventing models, and because they are _supposed_ to pass the reactive streams TCK then the resulting publishers shall also be compliant.
 This is a technically correct yet a poor answer in our opinion.
 
+![Reactive Streams pollution](assets/reactive-pollution.png)
+
 We dived into the code of several reactive streams client libraries, and we found out that more often than not they had become tightly-coupled to the peculiarities of certain reactive programming libraries.
 
 This is a major problem because strong adherence to a complete reactive programming library annihilates the benefits of the reactive streams specification:
@@ -52,6 +54,8 @@ This is a major problem because strong adherence to a complete reactive programm
 ## The promise of Mutiny Zero
 
 The mission of _Mutiny Zero_ is to provide a minimal library for implementing reactive streams compliant publishers.
+
+![Reactive Streams minimalism](assets/reactive-minimal.png)
 
 Mutiny Zero does not want to be a complete reactive programming library for Java, so you will only find APIs and helpers deemed useful to write publishers.
 Nothing else, nothing more.

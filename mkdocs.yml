@@ -14,7 +14,7 @@ copyright: >-
 theme:
   name: material
   palette:
-    primary: blue grey
+    primary: white
     accent: red
   font:
   features:
