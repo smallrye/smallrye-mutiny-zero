@@ -11,7 +11,7 @@
     <groupId>io.smallrye.reactive</groupId>
     <artifactId>mutiny-zero</artifactId>
     <name>SmallRye Mutiny Zero</name>
-    <version>0.1.0</version>
+    <version>0.2.0-SNAPSHOT</version>
     <description>Mutiny Zero is a minimal API for creating reactive-streams compliant publishers</description>
 
     <inceptionYear>2021</inceptionYear>
@@ -46,7 +46,7 @@
         <connection>scm:git:git@github.com:smallrye/smallrye-mutiny-zero.git</connection>
         <developerConnection>scm:git:git@github.com:smallrye/smallrye-mutiny-zero.git</developerConnection>
         <url>https://github.com/smallrye/smallrye-mutiny-zero</url>
-        <tag>0.1.0</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <properties>
