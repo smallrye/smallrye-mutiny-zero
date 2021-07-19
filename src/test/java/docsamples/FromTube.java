@@ -5,6 +5,7 @@ import static mutiny.zero.ZeroPublisher.create;
 import org.reactivestreams.Publisher;
 
 import mutiny.zero.BackpressureStrategy;
+import mutiny.zero.TubeConfiguration;
 
 public class FromTube {
 
@@ -12,7 +13,11 @@ public class FromTube {
 
         SampleAsyncSource source = new SampleAsyncSource();
 
-        Publisher<String> pub = create(BackpressureStrategy.BUFFER, 256, tube -> {
+        TubeConfiguration configuration = new TubeConfiguration()
+                .withBackpressureStrategy(BackpressureStrategy.BUFFER)
+                .withBufferSize(256);
+
+        Publisher<String> pub = create(configuration, tube -> {
 
             // Start
             source.start();
