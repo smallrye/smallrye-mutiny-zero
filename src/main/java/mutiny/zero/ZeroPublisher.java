@@ -63,7 +63,7 @@ public interface ZeroPublisher {
      * Note that this assumes an in-memory, non-blocking data structure, just like {@link #fromIterable(Iterable)}.
      * Also note that a {@link java.util.stream.Stream} can only be traversed once, hence the use of a supplier because
      * multiple subscriptions would fail.
-     * 
+     *
      * @param supplier the stream supplier, cannot be {@code null}
      * @param <T> the items type
      * @return a new {@link org.reactivestreams.Publisher}
@@ -109,7 +109,7 @@ public interface ZeroPublisher {
      * Create a {@link CompletionStage} from a {@link Publisher}.
      * <p>
      * The {@link Publisher} is requested exactly 1 element and the subscription is cancelled after it has been received.
-     * 
+     *
      * @param publisher the publisher, cannot be {@code null}
      * @param <T> the item type
      * @return a new {@link CompletionStage}
@@ -125,7 +125,7 @@ public interface ZeroPublisher {
 
     /**
      * Create a {@link org.reactivestreams.Publisher} from a known failure.
-     * 
+     *
      * @param failure the failure, cannot be {@code null}
      * @param <T> the items type
      * @return a new {@link org.reactivestreams.Publisher}
@@ -137,7 +137,7 @@ public interface ZeroPublisher {
 
     /**
      * Create an empty {@link org.reactivestreams.Publisher} that completes upon subscription without ever sending any item.
-     * 
+     *
      * @param <T> the items type
      * @return a new {@link org.reactivestreams.Publisher}
      */
@@ -149,21 +149,39 @@ public interface ZeroPublisher {
 
     /**
      * Create a new {@link org.reactivestreams.Publisher} with the general-purpose {@link Tube} API.
-     * 
+     *
+     * @param configuration the tube configuration
+     * @param tubeConsumer the tube consumer, cannot be {@code null}
+     * @param <T> the items type
+     * @return a new {@link org.reactivestreams.Publisher}
+     */
+    static <T> Publisher<T> create(TubeConfiguration configuration, Consumer<Tube<T>> tubeConsumer) {
+        requireNonNull(configuration.getBackpressureStrategy(), "The backpressure strategy cannot be null");
+        requireNonNull(tubeConsumer, "The tube consumer cannot be null");
+        if (((configuration.getBackpressureStrategy() == BackpressureStrategy.BUFFER)
+                || (configuration.getBackpressureStrategy() == BackpressureStrategy.LATEST))
+                && configuration.getBufferSize() <= 0) {
+            throw new IllegalArgumentException("The buffer size must be strictly positive");
+        }
+        return new TubePublisher<>(configuration, tubeConsumer);
+    }
+
+    /**
+     * Create a new {@link org.reactivestreams.Publisher} with the general-purpose {@link Tube} API.
+     *
      * @param backpressureStrategy the back-pressure strategy, cannot be {@code null}
      * @param bufferSize the buffer size, must be strictly positive when {@code backpressureStrategy} is one of
      *        {@link BackpressureStrategy#BUFFER} and {@link BackpressureStrategy#LATEST}
      * @param tubeConsumer the tube consumer, cannot be {@code null}
      * @param <T> the items type
      * @return a new {@link org.reactivestreams.Publisher}
+     * @deprecated Use {@link #create(TubeConfiguration, Consumer)} instead
      */
+    @Deprecated
     static <T> Publisher<T> create(BackpressureStrategy backpressureStrategy, int bufferSize, Consumer<Tube<T>> tubeConsumer) {
-        requireNonNull(backpressureStrategy, "The backpressure strategy cannot be null");
-        requireNonNull(tubeConsumer, "The tube consumer cannot be null");
-        if (((backpressureStrategy == BackpressureStrategy.BUFFER)
-                || (backpressureStrategy == BackpressureStrategy.LATEST)) && bufferSize <= 0) {
-            throw new IllegalArgumentException("The buffer size must be strictly positive");
-        }
-        return new TubePublisher<>(backpressureStrategy, bufferSize, tubeConsumer);
+        TubeConfiguration configuration = new TubeConfiguration()
+                .withBackpressureStrategy(backpressureStrategy)
+                .withBufferSize(bufferSize);
+        return create(configuration, tubeConsumer);
     }
 }

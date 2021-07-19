@@ -9,6 +9,7 @@ import org.reactivestreams.Subscriber;
 
 import mutiny.zero.BackpressureStrategy;
 import mutiny.zero.Tube;
+import mutiny.zero.TubeConfiguration;
 
 public class TubePublisher<T> implements Publisher<T> {
 
@@ -16,9 +17,9 @@ public class TubePublisher<T> implements Publisher<T> {
     private final int bufferSize;
     private final Consumer<Tube<T>> tubeConsumer;
 
-    public TubePublisher(BackpressureStrategy backpressureStrategy, int bufferSize, Consumer<Tube<T>> tubeConsumer) {
-        this.backpressureStrategy = backpressureStrategy;
-        this.bufferSize = bufferSize;
+    public TubePublisher(TubeConfiguration configuration, Consumer<Tube<T>> tubeConsumer) {
+        this.backpressureStrategy = configuration.getBackpressureStrategy();
+        this.bufferSize = configuration.getBufferSize();
         this.tubeConsumer = tubeConsumer;
     }
 
