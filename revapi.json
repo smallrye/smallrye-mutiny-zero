@@ -30,21 +30,10 @@
       "differences": [
         {
           "ignore": true,
-          "code": "java.class.externalClassExposedInAPI",
-          "new": "interface org.reactivestreams.Publisher<T>",
-          "justification": "This is intended by design"
-        },
-        {
-          "ignore": true,
-          "code": "java.class.externalClassExposedInAPI",
-          "new": "interface org.reactivestreams.Subscriber<T>",
-          "justification": "This is intended by design"
-        },
-        {
-          "ignore": true,
-          "code": "java.class.externalClassExposedInAPI",
-          "new": "interface org.reactivestreams.Subscription",
-          "justification": "This is intended by design"
+          "code": "java.method.numberOfParametersChanged",
+          "old": "method void mutiny.zero.internal.TubePublisher<T>::<init>(mutiny.zero.BackpressureStrategy, int, java.util.function.Consumer<mutiny.zero.Tube<T>>)",
+          "new": "method void mutiny.zero.internal.TubePublisher<T>::<init>(mutiny.zero.TubeConfiguration, java.util.function.Consumer<mutiny.zero.Tube<T>>)",
+          "justification": "Internal refactoring"
         }
       ]
     }

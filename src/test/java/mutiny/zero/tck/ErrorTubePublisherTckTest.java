@@ -5,6 +5,7 @@ import org.reactivestreams.tck.TestEnvironment;
 import org.reactivestreams.tck.junit5.PublisherVerification;
 
 import mutiny.zero.BackpressureStrategy;
+import mutiny.zero.TubeConfiguration;
 import mutiny.zero.ZeroPublisher;
 
 public class ErrorTubePublisherTckTest extends PublisherVerification<Long> {
@@ -15,7 +16,8 @@ public class ErrorTubePublisherTckTest extends PublisherVerification<Long> {
 
     @Override
     public Publisher<Long> createPublisher(long elements) {
-        return ZeroPublisher.create(BackpressureStrategy.ERROR, -1, tube -> TubeEmitLoop.loop(tube, elements));
+        TubeConfiguration configuration = new TubeConfiguration().withBackpressureStrategy(BackpressureStrategy.ERROR);
+        return ZeroPublisher.create(configuration, tube -> TubeEmitLoop.loop(tube, elements));
     }
 
     @Override

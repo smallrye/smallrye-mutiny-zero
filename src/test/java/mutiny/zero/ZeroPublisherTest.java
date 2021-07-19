@@ -463,7 +463,7 @@ class ZeroPublisherTest {
         @DisplayName("Tube dropping on back-pressure")
         void dropping() {
             AssertSubscriber<Integer> sub = AssertSubscriber.create(3);
-            ZeroPublisher.<Integer> create(BackpressureStrategy.DROP, -1, tube -> {
+            ZeroPublisher.<Integer> create(new TubeConfiguration(), tube -> {
                 for (int i = 1; i < 20; i++) {
                     tube.send(i);
                 }
@@ -478,7 +478,7 @@ class ZeroPublisherTest {
         @DisplayName("Tube dropping on back-pressure with error")
         void droppingError() {
             AssertSubscriber<Integer> sub = AssertSubscriber.create(10);
-            ZeroPublisher.<Integer> create(BackpressureStrategy.DROP, -1, tube -> {
+            ZeroPublisher.<Integer> create(new TubeConfiguration(), tube -> {
                 tube.send(1);
                 tube.fail(new IOException("boom"));
             }).subscribe(sub);
@@ -498,7 +498,7 @@ class ZeroPublisherTest {
             AtomicBoolean terminated = new AtomicBoolean();
 
             AssertSubscriber<Integer> sub = AssertSubscriber.create(3);
-            ZeroPublisher.<Integer> create(BackpressureStrategy.DROP, -1, tube -> {
+            ZeroPublisher.<Integer> create(new TubeConfiguration(), tube -> {
                 new Thread(() -> {
                     step1.set(true);
                     tube.whenRequested(requested::addAndGet);
@@ -530,7 +530,7 @@ class ZeroPublisherTest {
             AtomicBoolean step3 = new AtomicBoolean(false);
 
             AssertSubscriber<Integer> sub = AssertSubscriber.create(3);
-            ZeroPublisher.<Integer> create(BackpressureStrategy.DROP, -1, tube -> {
+            ZeroPublisher.<Integer> create(new TubeConfiguration(), tube -> {
                 new Thread(() -> {
                     for (int i = 1; i < 10; i++) {
                         tube.send(i);
@@ -563,7 +563,8 @@ class ZeroPublisherTest {
         @DisplayName("Tube error after 3 items")
         void failAfter3() {
             AssertSubscriber<Integer> sub = AssertSubscriber.create(3);
-            ZeroPublisher.<Integer> create(BackpressureStrategy.ERROR, -1, tube -> {
+            TubeConfiguration configuration = new TubeConfiguration().withBackpressureStrategy(BackpressureStrategy.ERROR);
+            ZeroPublisher.<Integer> create(configuration, tube -> {
                 for (int i = 1; i < 20; i++) {
                     tube.send(i);
                 }
@@ -578,7 +579,8 @@ class ZeroPublisherTest {
         @DisplayName("Tube that don't fail")
         void dontFail() {
             AssertSubscriber<Integer> sub = AssertSubscriber.create(Long.MAX_VALUE);
-            ZeroPublisher.<Integer> create(BackpressureStrategy.ERROR, -1, tube -> {
+            TubeConfiguration configuration = new TubeConfiguration().withBackpressureStrategy(BackpressureStrategy.ERROR);
+            ZeroPublisher.<Integer> create(configuration, tube -> {
                 for (int i = 1; i < 4; i++) {
                     tube.send(i);
                 }
@@ -598,7 +600,8 @@ class ZeroPublisherTest {
         @DisplayName("Tube that doesn't care")
         void yolo() {
             AssertSubscriber<Integer> sub = AssertSubscriber.create(3);
-            ZeroPublisher.<Integer> create(BackpressureStrategy.IGNORE, -1, tube -> {
+            TubeConfiguration configuration = new TubeConfiguration().withBackpressureStrategy(BackpressureStrategy.IGNORE);
+            ZeroPublisher.<Integer> create(configuration, tube -> {
                 for (int i = 1; i < 6; i++) {
                     tube.send(i);
                 }
@@ -614,7 +617,8 @@ class ZeroPublisherTest {
         void completeTwice() {
             Assertions.assertThrows(IllegalStateException.class, () -> {
                 AssertSubscriber<Integer> sub = AssertSubscriber.create(Long.MAX_VALUE);
-                ZeroPublisher.<Integer> create(BackpressureStrategy.IGNORE, -1, tube -> {
+                TubeConfiguration configuration = new TubeConfiguration().withBackpressureStrategy(BackpressureStrategy.IGNORE);
+                ZeroPublisher.<Integer> create(configuration, tube -> {
                     for (int i = 1; i < 6; i++) {
                         tube.send(i);
                     }
@@ -628,7 +632,8 @@ class ZeroPublisherTest {
         @DisplayName("Send a null")
         void sendNull() {
             AssertSubscriber<Integer> sub = AssertSubscriber.create(3);
-            ZeroPublisher.<Integer> create(BackpressureStrategy.IGNORE, -1, tube -> {
+            TubeConfiguration configuration = new TubeConfiguration().withBackpressureStrategy(BackpressureStrategy.IGNORE);
+            ZeroPublisher.<Integer> create(configuration, tube -> {
                 for (int i = 1; i < 6; i++) {
                     if (i == 3) {
                         tube.send(null);
@@ -650,7 +655,8 @@ class ZeroPublisherTest {
             AtomicBoolean step2 = new AtomicBoolean();
 
             AssertSubscriber<Integer> sub = AssertSubscriber.create(10L);
-            ZeroPublisher.<Integer> create(BackpressureStrategy.IGNORE, -1, tube -> {
+            TubeConfiguration configuration = new TubeConfiguration().withBackpressureStrategy(BackpressureStrategy.IGNORE);
+            ZeroPublisher.<Integer> create(configuration, tube -> {
                 new Thread(() -> {
                     for (int i = 1; i < 20; i++) {
                         tube.send(i);
@@ -681,13 +687,14 @@ class ZeroPublisherTest {
         @Test
         @DisplayName("Bad initialization parameters")
         void badInit() {
+            TubeConfiguration configuration = new TubeConfiguration().withBackpressureStrategy(BackpressureStrategy.BUFFER);
             Assertions.assertThrows(IllegalArgumentException.class,
-                    () -> ZeroPublisher.create(BackpressureStrategy.BUFFER, -1, tube -> {
+                    () -> ZeroPublisher.create(configuration, tube -> {
                         // Nothing here
                     }));
 
             Assertions.assertThrows(IllegalArgumentException.class,
-                    () -> ZeroPublisher.create(BackpressureStrategy.BUFFER, 0, tube -> {
+                    () -> ZeroPublisher.create(configuration, tube -> {
                         // Nothing here
                     }));
         }
@@ -700,7 +707,10 @@ class ZeroPublisherTest {
             AtomicBoolean terminated = new AtomicBoolean();
 
             AssertSubscriber<Integer> sub = AssertSubscriber.create(10L);
-            ZeroPublisher.<Integer> create(BackpressureStrategy.BUFFER, 256, tube -> {
+            TubeConfiguration configuration = new TubeConfiguration()
+                    .withBackpressureStrategy(BackpressureStrategy.BUFFER)
+                    .withBufferSize(256);
+            ZeroPublisher.<Integer> create(configuration, tube -> {
                 tube.whenRequested(requested::addAndGet)
                         .whenTerminates(() -> terminated.set(true))
                         .whenCancelled(() -> cancelled.set(true));
@@ -722,7 +732,10 @@ class ZeroPublisherTest {
         @DisplayName("Overflow within the buffer bounds")
         void overflowOk() {
             AssertSubscriber<Integer> sub = AssertSubscriber.create(5);
-            ZeroPublisher.<Integer> create(BackpressureStrategy.BUFFER, 256, tube -> {
+            TubeConfiguration configuration = new TubeConfiguration()
+                    .withBackpressureStrategy(BackpressureStrategy.BUFFER)
+                    .withBufferSize(256);
+            ZeroPublisher.<Integer> create(configuration, tube -> {
                 for (int i = 1; i < 100; i++) {
                     tube.send(i);
                 }
@@ -737,7 +750,10 @@ class ZeroPublisherTest {
         @DisplayName("Overflow outside the buffer bounds")
         void overflowKo() {
             AssertSubscriber<Integer> sub = AssertSubscriber.create(5);
-            ZeroPublisher.<Integer> create(BackpressureStrategy.BUFFER, 256, tube -> {
+            TubeConfiguration configuration = new TubeConfiguration()
+                    .withBackpressureStrategy(BackpressureStrategy.BUFFER)
+                    .withBufferSize(256);
+            ZeroPublisher.<Integer> create(configuration, tube -> {
                 for (int i = 1; i < 512; i++) {
                     tube.send(i);
                 }
@@ -752,7 +768,10 @@ class ZeroPublisherTest {
         @DisplayName("Overflow then drain")
         void overflowThenDrain() {
             AssertSubscriber<Integer> sub = AssertSubscriber.create(5);
-            ZeroPublisher.<Integer> create(BackpressureStrategy.BUFFER, 10, tube -> {
+            TubeConfiguration configuration = new TubeConfiguration()
+                    .withBackpressureStrategy(BackpressureStrategy.BUFFER)
+                    .withBufferSize(10);
+            ZeroPublisher.<Integer> create(configuration, tube -> {
                 for (int i = 1; i < 11; i++) {
                     tube.send(i);
                 }
@@ -775,7 +794,10 @@ class ZeroPublisherTest {
             AtomicBoolean step1 = new AtomicBoolean();
             AtomicBoolean step2 = new AtomicBoolean();
 
-            ZeroPublisher.<Integer> create(BackpressureStrategy.BUFFER, 256, tube -> {
+            TubeConfiguration configuration = new TubeConfiguration()
+                    .withBackpressureStrategy(BackpressureStrategy.BUFFER)
+                    .withBufferSize(256);
+            ZeroPublisher.<Integer> create(configuration, tube -> {
                 new Thread(() -> {
                     for (int i = 1; i < 20; i++) {
                         tube.send(i);
@@ -811,7 +833,9 @@ class ZeroPublisherTest {
         void unbounded() {
             AssertSubscriber<Integer> sub = AssertSubscriber.create(5);
 
-            ZeroPublisher.<Integer> create(BackpressureStrategy.UNBOUNDED_BUFFER, -1, tube -> {
+            TubeConfiguration configuration = new TubeConfiguration()
+                    .withBackpressureStrategy(BackpressureStrategy.UNBOUNDED_BUFFER);
+            ZeroPublisher.<Integer> create(configuration, tube -> {
                 for (int i = 1; i < 101; i++) {
                     tube.send(i);
                 }
@@ -838,13 +862,16 @@ class ZeroPublisherTest {
         @Test
         @DisplayName("Bad initialization parameters")
         void badInit() {
+            TubeConfiguration configuration = new TubeConfiguration()
+                    .withBackpressureStrategy(BackpressureStrategy.LATEST);
+
             Assertions.assertThrows(IllegalArgumentException.class,
-                    () -> ZeroPublisher.create(BackpressureStrategy.LATEST, -1, tube -> {
+                    () -> ZeroPublisher.create(configuration, tube -> {
                         // Nothing here
                     }));
 
             Assertions.assertThrows(IllegalArgumentException.class,
-                    () -> ZeroPublisher.create(BackpressureStrategy.LATEST, 0, tube -> {
+                    () -> ZeroPublisher.create(configuration, tube -> {
                         // Nothing here
                     }));
         }
@@ -852,7 +879,9 @@ class ZeroPublisherTest {
         @Test
         @DisplayName("Bad request")
         void badReq() {
-            Publisher<Object> publisher = ZeroPublisher.create(BackpressureStrategy.DROP, -1, tube -> {
+            TubeConfiguration configuration = new TubeConfiguration()
+                    .withBackpressureStrategy(BackpressureStrategy.DROP);
+            Publisher<Object> publisher = ZeroPublisher.create(configuration, tube -> {
                 // Nothing here
             });
 
@@ -872,7 +901,10 @@ class ZeroPublisherTest {
         @DisplayName("No overflow")
         void noOverflow() {
             AssertSubscriber<Integer> sub = AssertSubscriber.create(10);
-            ZeroPublisher.<Integer> create(BackpressureStrategy.LATEST, 256, tube -> {
+            TubeConfiguration configuration = new TubeConfiguration()
+                    .withBackpressureStrategy(BackpressureStrategy.LATEST)
+                    .withBufferSize(256);
+            ZeroPublisher.<Integer> create(configuration, tube -> {
                 for (int i = 1; i < 6; i++) {
                     tube.send(i);
                 }
@@ -887,7 +919,10 @@ class ZeroPublisherTest {
         @DisplayName("Overflow within the buffer bounds")
         void overflowWithin() {
             AssertSubscriber<Integer> sub = AssertSubscriber.create(5);
-            ZeroPublisher.<Integer> create(BackpressureStrategy.LATEST, 256, tube -> {
+            TubeConfiguration configuration = new TubeConfiguration()
+                    .withBackpressureStrategy(BackpressureStrategy.LATEST)
+                    .withBufferSize(256);
+            ZeroPublisher.<Integer> create(configuration, tube -> {
                 for (int i = 1; i < 100; i++) {
                     tube.send(i);
                 }
@@ -902,7 +937,10 @@ class ZeroPublisherTest {
         @DisplayName("Overflow outside the buffer bounds")
         void overflowOver() {
             AssertSubscriber<Integer> sub = AssertSubscriber.create();
-            ZeroPublisher.<Integer> create(BackpressureStrategy.LATEST, 5, tube -> {
+            TubeConfiguration configuration = new TubeConfiguration()
+                    .withBackpressureStrategy(BackpressureStrategy.LATEST)
+                    .withBufferSize(5);
+            ZeroPublisher.<Integer> create(configuration, tube -> {
                 for (int i = 1; i < 500; i++) {
                     tube.send(i);
                 }

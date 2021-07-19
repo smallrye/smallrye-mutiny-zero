@@ -2,6 +2,8 @@ package mutiny.zero;
 
 import java.util.function.LongConsumer;
 
+import org.reactivestreams.Publisher;
+
 /**
  * A {@link Tube} is a general-purpose abstraction for creating {@link org.reactivestreams.Publisher}.
  * <p>
@@ -75,5 +77,4 @@ public interface Tube<T> {
      * @return this {@link Tube}
      */
     Tube<T> whenRequested(LongConsumer consumer);
-
 }
