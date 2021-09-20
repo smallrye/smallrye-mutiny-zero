@@ -55,7 +55,7 @@
         <mutiny.version>1.0.0</mutiny.version>
         <awaitility.version>4.1.0</awaitility.version>
         <junit-jupiter.version>5.8.0</junit-jupiter.version>
-        <assertj-core.version>3.20.2</assertj-core.version>
+        <assertj-core.version>3.21.0</assertj-core.version>
 
         <jbang-maven-plugin.version>0.0.7</jbang-maven-plugin.version>
         <build-helper-maven-plugin.version>3.2.0</build-helper-maven-plugin.version>
