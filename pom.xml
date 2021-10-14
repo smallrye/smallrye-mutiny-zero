@@ -52,7 +52,7 @@
 
     <properties>
         <reactive-streams.version>1.0.3</reactive-streams.version>
-        <mutiny.version>1.0.0</mutiny.version>
+        <mutiny.version>1.1.2</mutiny.version>
         <awaitility.version>4.1.0</awaitility.version>
         <junit-jupiter.version>5.8.1</junit-jupiter.version>
         <assertj-core.version>3.21.0</assertj-core.version>
@@ -61,10 +61,10 @@
         <build-helper-maven-plugin.version>3.2.0</build-helper-maven-plugin.version>
         <moditect-maven-plugin.version>1.0.0.RC2</moditect-maven-plugin.version>
 
-        <revapi-maven-plugin.version>0.14.3</revapi-maven-plugin.version>
-        <revapi-java.version>0.24.4</revapi-java.version>
-        <revapi-reporter-json.version>0.4.2</revapi-reporter-json.version>
-        <revapi-reporter-text.version>0.14.2</revapi-reporter-text.version>
+        <revapi-maven-plugin.version>0.14.5</revapi-maven-plugin.version>
+        <revapi-java.version>0.26.0</revapi-java.version>
+        <revapi-reporter-json.version>0.4.4</revapi-reporter-json.version>
+        <revapi-reporter-text.version>0.14.4</revapi-reporter-text.version>
 
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
