@@ -62,7 +62,7 @@
         <moditect-maven-plugin.version>1.0.0.RC2</moditect-maven-plugin.version>
 
         <revapi-maven-plugin.version>0.14.5</revapi-maven-plugin.version>
-        <revapi-java.version>0.26.0</revapi-java.version>
+        <revapi-java.version>0.26.1</revapi-java.version>
         <revapi-reporter-json.version>0.4.4</revapi-reporter-json.version>
         <revapi-reporter-text.version>0.14.4</revapi-reporter-text.version>
 
