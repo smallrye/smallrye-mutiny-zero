@@ -53,7 +53,7 @@
     <properties>
         <reactive-streams.version>1.0.3</reactive-streams.version>
         <mutiny.version>1.3.1</mutiny.version>
-        <awaitility.version>4.1.1</awaitility.version>
+        <awaitility.version>4.2.0</awaitility.version>
         <junit-jupiter.version>5.8.2</junit-jupiter.version>
         <assertj-core.version>3.22.0</assertj-core.version>
 
