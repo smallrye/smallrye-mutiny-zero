@@ -35,7 +35,7 @@ public class MapOperator<I, O> implements Publisher<O> {
 
         @Override
         public void subscribe(Subscriber<? super O> subscriber) {
-            System.out.println("??? " + subscriber);
+
         }
 
         @Override
