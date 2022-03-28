@@ -64,15 +64,13 @@
 
         <jbang-maven-plugin.version>0.0.7</jbang-maven-plugin.version>
         <build-helper-maven-plugin.version>3.3.0</build-helper-maven-plugin.version>
-        <moditect-maven-plugin.version>1.0.0.RC2</moditect-maven-plugin.version>
 
         <revapi-maven-plugin.version>0.14.6</revapi-maven-plugin.version>
         <revapi-java.version>0.26.1</revapi-java.version>
         <revapi-reporter-json.version>0.4.5</revapi-reporter-json.version>
         <revapi-reporter-text.version>0.14.5</revapi-reporter-text.version>
 
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.release>11</maven.compiler.release>
     </properties>
 
     <dependencies>
@@ -146,6 +144,13 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <release>${maven.compiler.release}</release>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <executions>
                     <execution>
@@ -169,28 +174,6 @@
                         <goals>
                             <goal>jar</goal>
                         </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.moditect</groupId>
-                <artifactId>moditect-maven-plugin</artifactId>
-                <version>${moditect-maven-plugin.version}</version>
-                <configuration>
-                    <overwriteExistingFiles>true</overwriteExistingFiles>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>add-module-infos</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>add-module-info</goal>
-                        </goals>
-                        <configuration>
-                            <module>
-                                <moduleInfoFile>src/main/module/module-info.java</moduleInfoFile>
-                            </module>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>

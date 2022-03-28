@@ -1,4 +1,4 @@
 module mutiny.zero {
-    requires org.reactivestreams;
+    requires transitive org.reactivestreams;
     exports mutiny.zero;
 }
