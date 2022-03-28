@@ -289,29 +289,29 @@
                             <detectJavaApiLink>false</detectJavaApiLink>
                         </configuration>
                     </plugin>
-                    <plugin>
-                        <groupId>dev.jbang</groupId>
-                        <artifactId>jbang-maven-plugin</artifactId>
-                        <version>${jbang-maven-plugin.version}</version>
-                        <executions>
-                            <execution>
-                                <id>smoke-test</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                                <configuration>
-                                    <script>scripts/smoke_test.java</script>
-                                    <jbangargs>
-                                        <jbangarg>--cp</jbangarg>
-                                        <jbangarg>
-                                            ${project.build.directory}/${project.artifactId}-${project.version}-jdk-flow.jar
-                                        </jbangarg>
-                                    </jbangargs>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
+<!--                    <plugin>-->
+<!--                        <groupId>dev.jbang</groupId>-->
+<!--                        <artifactId>jbang-maven-plugin</artifactId>-->
+<!--                        <version>${jbang-maven-plugin.version}</version>-->
+<!--                        <executions>-->
+<!--                            <execution>-->
+<!--                                <id>smoke-test</id>-->
+<!--                                <phase>verify</phase>-->
+<!--                                <goals>-->
+<!--                                    <goal>run</goal>-->
+<!--                                </goals>-->
+<!--                                <configuration>-->
+<!--                                    <script>scripts/smoke_test.java</script>-->
+<!--                                    <jbangargs>-->
+<!--                                        <jbangarg>&#45;&#45;cp</jbangarg>-->
+<!--                                        <jbangarg>-->
+<!--                                            ${project.build.directory}/${project.artifactId}-${project.version}-jdk-flow.jar-->
+<!--                                        </jbangarg>-->
+<!--                                    </jbangargs>-->
+<!--                                </configuration>-->
+<!--                            </execution>-->
+<!--                        </executions>-->
+<!--                    </plugin>-->
                 </plugins>
             </build>
         </profile>
