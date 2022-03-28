@@ -3,8 +3,8 @@ package mutiny.zero.tck;
 import java.util.stream.LongStream;
 
 import org.reactivestreams.Publisher;
+import org.reactivestreams.tck.PublisherVerification;
 import org.reactivestreams.tck.TestEnvironment;
-import org.reactivestreams.tck.junit5.PublisherVerification;
 
 import mutiny.zero.ZeroPublisher;
 
