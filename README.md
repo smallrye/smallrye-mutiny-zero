@@ -9,7 +9,7 @@ See [https://smallrye.io/smallrye-mutiny-zero/](https://smallrye.io/smallrye-mut
 
 ## 📦 Build instructions
 
-The project is built with Apache Maven and requires Java 8 and beyond:
+The project is built with Apache Maven and requires Java 11 and beyond:
 
 ```
 $ mvn install
