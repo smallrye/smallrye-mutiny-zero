@@ -52,10 +52,15 @@
 
     <properties>
         <reactive-streams.version>1.0.3</reactive-streams.version>
+
         <mutiny.version>1.4.0</mutiny.version>
         <awaitility.version>4.2.0</awaitility.version>
-        <junit-jupiter.version>5.8.2</junit-jupiter.version>
         <assertj-core.version>3.22.0</assertj-core.version>
+
+        <junit-jupiter.version>5.8.2</junit-jupiter.version>
+        <testng.version>7.5</testng.version>
+        <testng-junit5-engine.version>1.0.1</testng-junit5-engine.version>
+        <logback-classic.version>1.2.7</logback-classic.version>
 
         <jbang-maven-plugin.version>0.0.7</jbang-maven-plugin.version>
         <build-helper-maven-plugin.version>3.3.0</build-helper-maven-plugin.version>
@@ -85,19 +90,25 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>io.smallrye.reactive</groupId>
-            <artifactId>reactive-streams-junit5-tck</artifactId>
-            <version>${mutiny.version}</version>
-            <classifier>tests</classifier>
-            <type>test-jar</type>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.reactivestreams</groupId>
             <artifactId>reactive-streams-tck</artifactId>
             <version>${reactive-streams.version}</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${assertj-core.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.awaitility</groupId>
+            <artifactId>awaitility</artifactId>
+            <version>${awaitility.version}</version>
+            <scope>test</scope>
+        </dependency>
+
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
@@ -111,17 +122,23 @@
             <version>${junit-jupiter.version}</version>
             <scope>test</scope>
         </dependency>
+        <!-- TestNG running in JUnit5 -->
         <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <version>${assertj-core.version}</version>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>${testng.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.awaitility</groupId>
-            <artifactId>awaitility</artifactId>
-            <version>${awaitility.version}</version>
+            <groupId>org.junit.support</groupId>
+            <artifactId>testng-engine</artifactId>
+            <version>${testng-junit5-engine.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback-classic.version}</version>
         </dependency>
     </dependencies>
 
