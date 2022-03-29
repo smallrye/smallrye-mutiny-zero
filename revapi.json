@@ -7,15 +7,17 @@
         "behavior": "report",
         "ignoreMissingAnnotations": false
       }
-    },
-    "filter": {
-      "packages": {
-        "regex": false,
+    }
+  },
+  {
+    "extension": "revapi.filter",
+    "configuration": {
+      "elements": {
         "include": [
-          "mutiny.zero"
-        ],
-        "exclude": [
-          "mutiny.zero.internal"
+          {
+            "matcher": "java-package",
+            "match": "mutiny.zero"
+          }
         ]
       }
     }
@@ -27,15 +29,7 @@
       "criticality": "highlight",
       "minSeverity": "POTENTIALLY_BREAKING",
       "minCriticality": "documented",
-      "differences": [
-        {
-          "ignore": true,
-          "code": "java.method.numberOfParametersChanged",
-          "old": "method void mutiny.zero.internal.TubePublisher<T>::<init>(mutiny.zero.BackpressureStrategy, int, java.util.function.Consumer<mutiny.zero.Tube<T>>)",
-          "new": "method void mutiny.zero.internal.TubePublisher<T>::<init>(mutiny.zero.TubeConfiguration, java.util.function.Consumer<mutiny.zero.Tube<T>>)",
-          "justification": "Internal refactoring"
-        }
-      ]
+      "differences": []
     }
   },
   {
