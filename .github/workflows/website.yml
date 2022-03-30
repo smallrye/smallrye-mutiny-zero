@@ -32,6 +32,6 @@ jobs:
           pip install mkdocs-material
           pip install mike          
       - name: Build local artifacts
-        run: mvn -B install -DskipTests
+        run: ./mvnw -B install -DskipTests
       - name: Render docs and publish
         run: .github/scripts/render-documentation.sh

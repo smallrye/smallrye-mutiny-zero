@@ -27,7 +27,7 @@ jobs:
       - name: Build with Maven
         env:
           MAVEN_OPTS: ${{ matrix.java.opts }}
-        run: mvn -s .github/maven-ci-settings.xml -B clean verify
+        run: ./mvnw -s .github/maven-ci-settings.xml -B clean verify
 
   deploy:
     name: Deployment
@@ -61,4 +61,4 @@ jobs:
           java-version: 11
           cache: maven
       - name: Compatibility Check
-        run: mvn -s .github/maven-ci-settings.xml -B install revapi:check@check-compatibility -DskipTests -fae
+        run: ./mvnw -s .github/maven-ci-settings.xml -B install revapi:check@check-compatibility -DskipTests -fae

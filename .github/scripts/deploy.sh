@@ -19,5 +19,5 @@ git checkout main
 
 echo "Deploy"
 
-mvn -B clean deploy -DskipTests -Prelease -s maven-settings.xml
+./mvnw -B clean deploy -DskipTests -Prelease -s maven-settings.xml
 
