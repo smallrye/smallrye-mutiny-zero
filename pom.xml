@@ -19,6 +19,7 @@
 
     <modules>
         <module>mutiny-zero</module>
+        <module>mutiny-zero-flow-adapters</module>
     </modules>
 
     <inceptionYear>2021</inceptionYear>
