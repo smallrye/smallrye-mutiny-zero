@@ -15,9 +15,19 @@ import mutiny.zero.flow.adapters.tors.PublisherAdapterFromFlow;
 import mutiny.zero.flow.adapters.tors.SubscriberAdapterFromFlow;
 import mutiny.zero.flow.adapters.tors.SubscriptionAdapterFromFlow;
 
+/**
+ * Adapters from {@link Flow} types to Reactive Streams types.
+ */
 @SuppressWarnings("unchecked")
 public interface AdaptersToReactiveStreams {
 
+    /**
+     * Convert a {@link Flow.Publisher} to a {@link Publisher}.
+     *
+     * @param publisher the publisher
+     * @param <T> the items type
+     * @return the wrapped publisher
+     */
     static <T> Publisher<T> publisher(Flow.Publisher<T> publisher) {
         requireNonNull(publisher, "The publisher must not be null");
         if (publisher instanceof Wrapper) {
@@ -27,6 +37,13 @@ public interface AdaptersToReactiveStreams {
         }
     }
 
+    /**
+     * Convert a {@link Flow.Subscriber} to a {@link Subscriber}.
+     *
+     * @param subscriber the subscriber
+     * @param <T> the items type
+     * @return the wrapped subscriber
+     */
     static <T> Subscriber<T> subscriber(Flow.Subscriber<T> subscriber) {
         requireNonNull(subscriber, "The subscriber must not be null");
         if (subscriber instanceof Wrapper) {
@@ -36,6 +53,12 @@ public interface AdaptersToReactiveStreams {
         }
     }
 
+    /**
+     * Convert a {@link Flow.Subscription} to a {@link Subscription}.
+     *
+     * @param subscription the subscription
+     * @return the wrapped subscription
+     */
     static Subscription subscription(Flow.Subscription subscription) {
         requireNonNull(subscription, "The subscription must not be null");
         if (subscription instanceof Wrapper) {
@@ -45,6 +68,14 @@ public interface AdaptersToReactiveStreams {
         }
     }
 
+    /**
+     * Convert a {@link Flow.Processor} to a {@link Processor}.
+     *
+     * @param processor the processor
+     * @param <T> the items type
+     * @param <R> the output items type
+     * @return the wrapped processor
+     */
     static <T, R> Processor<T, R> processor(Flow.Processor<T, R> processor) {
         requireNonNull(processor, "The processor must not be null");
         if (processor instanceof Wrapper) {
