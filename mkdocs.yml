@@ -4,8 +4,9 @@ edit_uri: edit/main/docs/
 
 nav:
   - Overview: 'index.md'
-  - Quick start: 'quick-start.md'
+  - 'quick-start.md'
   - Javadoc: './apidocs/index.html'
+  - 'flow-adapters.md'
 
 copyright: >-
   Sponsored by <a href="https://www.redhat.com"><img style="vertical-align: middle; height: 2.5em;" alt="Red Hat" src="./assets/redhat_reversed.svg"/></a> <br/>

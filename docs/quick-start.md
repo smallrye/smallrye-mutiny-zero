@@ -20,7 +20,7 @@ Your main entry point in the Mutiny Zero API is the `mutiny.zero.ZeroPublisher` 
 If you already know the values to be emitted (or a failure), then you can use following factory methods:
 
 ```java linenums="1"
---8<-- "src/test/java/docsamples/FromKnownValues.java"
+--8<-- "mutiny-zero/src/test/java/docsamples/FromKnownValues.java"
 ```
 
 ### Creating from `CompletionStage`
@@ -30,7 +30,7 @@ If you already know the values to be emitted (or a failure), then you can use fo
 Mutiny Zero can create a `Publisher` from a `CompletionStage` that emits exactly 1 item or a failure, then a completion signal:
 
 ```java linenums="1"
---8<-- "src/test/java/docsamples/FromCompletionStage.java"
+--8<-- "mutiny-zero/src/test/java/docsamples/FromCompletionStage.java"
 ```
 
 ### Creating using the general-purpose `Tube` API
@@ -44,7 +44,7 @@ A `Tube` is a good abstraction if you want to pass events from an existing async
 Here is a not so fictional example where `SampleAsyncSource` (an asynchronous I/O API) has to be adapted to a `Publisher`:
 
 ```java linenums="1"
---8<-- "src/test/java/docsamples/FromTube.java"
+--8<-- "mutiny-zero/src/test/java/docsamples/FromTube.java"
 ```
 
 Since `SampleAsyncSource` does not support reactive streams but can be paused and resumed, the `Tube` API is used not just to send items but also to control `SampleAsyncSource`.
