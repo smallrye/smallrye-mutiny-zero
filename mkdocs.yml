@@ -4,8 +4,9 @@ edit_uri: edit/main/docs/
 
 nav:
   - Overview: 'index.md'
-  - Quick start: 'quick-start.md'
+  - 'quick-start.md'
   - Javadoc: './apidocs/index.html'
+  - 'flow-adapters.md'
 
 theme:
   name: material
