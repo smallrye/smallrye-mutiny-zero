@@ -61,7 +61,7 @@
 
         <mutiny.version>1.5.0</mutiny.version>
         <awaitility.version>4.2.0</awaitility.version>
-        <assertj-core.version>3.22.0</assertj-core.version>
+        <assertj-core.version>3.23.0</assertj-core.version>
 
         <junit-jupiter.version>5.8.2</junit-jupiter.version>
         <testng.version>7.6.0</testng.version>
