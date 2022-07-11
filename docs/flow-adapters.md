@@ -1,6 +1,6 @@
 # JDK Flow from/to Reactive Streams Adapters
 
-The `rs-flow-adapters` library (Maven coordinates `io.smallrye.reactive:rs-flow-adapters`) provides a *clean room* implementation of adapters from and to the [JDK Flow interfaces](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/Flow.html) that match those from Reactive Streams.
+The `mutiny-zero-flow-adapters` library (Maven coordinates `io.smallrye.reactive:mutiny-zero-flow-adapters`) provides a *clean room* implementation of adapters from and to the [JDK Flow interfaces](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/Flow.html) that match those from Reactive Streams.
 
 ## Why another adapter library?
 
