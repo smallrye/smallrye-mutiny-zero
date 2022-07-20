@@ -2,14 +2,13 @@ package mutiny.zero.internal;
 
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
-
-import org.reactivestreams.Subscriber;
+import java.util.concurrent.Flow;
 
 public class UnbounbedBufferingTube<T> extends BufferingTubeBase<T> {
 
     private final ConcurrentLinkedQueue<T> overflowQueue;
 
-    public UnbounbedBufferingTube(Subscriber<? super T> subscriber) {
+    public UnbounbedBufferingTube(Flow.Subscriber<? super T> subscriber) {
         super(subscriber, -1);
         overflowQueue = new ConcurrentLinkedQueue<>();
     }

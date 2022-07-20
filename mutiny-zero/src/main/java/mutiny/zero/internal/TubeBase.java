@@ -4,18 +4,17 @@ import static java.util.Objects.requireNonNull;
 
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.Flow;
+import java.util.concurrent.Flow.Subscription;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.LongConsumer;
-
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
 
 import mutiny.zero.Tube;
 
 public abstract class TubeBase<T> implements Tube<T>, Subscription {
 
-    protected final Subscriber<? super T> subscriber;
+    protected final Flow.Subscriber<? super T> subscriber;
 
     protected volatile boolean cancelled;
     protected final AtomicInteger wip = new AtomicInteger();
@@ -37,7 +36,7 @@ public abstract class TubeBase<T> implements Tube<T>, Subscription {
         // Do nothing
     };
 
-    protected TubeBase(Subscriber<? super T> subscriber) {
+    protected TubeBase(Flow.Subscriber<? super T> subscriber) {
         this.subscriber = subscriber;
     }
 

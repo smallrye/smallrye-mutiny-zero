@@ -29,7 +29,102 @@
       "criticality": "highlight",
       "minSeverity": "POTENTIALLY_BREAKING",
       "minCriticality": "documented",
-      "differences": []
+      "differences": [
+        {
+          "ignore": true,
+          "code": "java.method.parameterTypeChanged",
+          "old": "parameter <T> java.util.concurrent.CompletionStage<java.util.List<T>> mutiny.zero.PublisherHelpers::collectToList(===org.reactivestreams.Publisher<T>===)",
+          "new": "parameter <T> java.util.concurrent.CompletionStage<java.util.List<T>> mutiny.zero.PublisherHelpers::collectToList(===java.util.concurrent.Flow.Publisher<T>===)",
+          "parameterIndex": "0",
+          "justification": "Migration from the legacy Reactive Streams APIs to java.util.concurrent.Flow"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.parameterTypeChanged",
+          "old": "parameter <I, O> org.reactivestreams.Publisher<O> mutiny.zero.PublisherHelpers::map(===org.reactivestreams.Publisher<I>===, java.util.function.Function<I, O>)",
+          "new": "parameter <I, O> java.util.concurrent.Flow.Publisher<O> mutiny.zero.PublisherHelpers::map(===java.util.concurrent.Flow.Publisher<I>===, java.util.function.Function<I, O>)",
+          "parameterIndex": "0",
+          "justification": "Migration from the legacy Reactive Streams APIs to java.util.concurrent.Flow"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.returnTypeChanged",
+          "old": "method <I, O> org.reactivestreams.Publisher<O> mutiny.zero.PublisherHelpers::map(org.reactivestreams.Publisher<I>, java.util.function.Function<I, O>)",
+          "new": "method <I, O> java.util.concurrent.Flow.Publisher<O> mutiny.zero.PublisherHelpers::map(java.util.concurrent.Flow.Publisher<I>, java.util.function.Function<I, O>)",
+          "justification": "Migration from the legacy Reactive Streams APIs to java.util.concurrent.Flow"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.returnTypeChanged",
+          "old": "method <T> org.reactivestreams.Publisher<T> mutiny.zero.ZeroPublisher::create(mutiny.zero.TubeConfiguration, java.util.function.Consumer<mutiny.zero.Tube<T>>)",
+          "new": "method <T> java.util.concurrent.Flow.Publisher<T> mutiny.zero.ZeroPublisher::create(mutiny.zero.TubeConfiguration, java.util.function.Consumer<mutiny.zero.Tube<T>>)",
+          "justification": "Migration from the legacy Reactive Streams APIs to java.util.concurrent.Flow"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.returnTypeChanged",
+          "old": "method <T> org.reactivestreams.Publisher<T> mutiny.zero.ZeroPublisher::create(mutiny.zero.BackpressureStrategy, int, java.util.function.Consumer<mutiny.zero.Tube<T>>)",
+          "new": "method <T> java.util.concurrent.Flow.Publisher<T> mutiny.zero.ZeroPublisher::create(mutiny.zero.BackpressureStrategy, int, java.util.function.Consumer<mutiny.zero.Tube<T>>)",
+          "justification": "Migration from the legacy Reactive Streams APIs to java.util.concurrent.Flow"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.returnTypeChanged",
+          "old": "method <T> org.reactivestreams.Publisher<T> mutiny.zero.ZeroPublisher::empty()",
+          "new": "method <T> java.util.concurrent.Flow.Publisher<T> mutiny.zero.ZeroPublisher::empty()",
+          "justification": "Migration from the legacy Reactive Streams APIs to java.util.concurrent.Flow"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.returnTypeChanged",
+          "old": "method <T> org.reactivestreams.Publisher<T> mutiny.zero.ZeroPublisher::fromCompletionStage(java.util.function.Supplier<java.util.concurrent.CompletionStage<T>>)",
+          "new": "method <T> java.util.concurrent.Flow.Publisher<T> mutiny.zero.ZeroPublisher::fromCompletionStage(java.util.function.Supplier<java.util.concurrent.CompletionStage<T>>)",
+          "justification": "Migration from the legacy Reactive Streams APIs to java.util.concurrent.Flow"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.returnTypeChanged",
+          "old": "method <T> org.reactivestreams.Publisher<T> mutiny.zero.ZeroPublisher::fromFailure(java.lang.Throwable)",
+          "new": "method <T> java.util.concurrent.Flow.Publisher<T> mutiny.zero.ZeroPublisher::fromFailure(java.lang.Throwable)",
+          "justification": "Migration from the legacy Reactive Streams APIs to java.util.concurrent.Flow"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.returnTypeChanged",
+          "old": "method <S, T> org.reactivestreams.Publisher<T> mutiny.zero.ZeroPublisher::fromGenerator(java.util.function.Supplier<S>, java.util.function.Function<S, java.util.Iterator<T>>)",
+          "new": "method <S, T> java.util.concurrent.Flow.Publisher<T> mutiny.zero.ZeroPublisher::fromGenerator(java.util.function.Supplier<S>, java.util.function.Function<S, java.util.Iterator<T>>)",
+          "justification": "Migration from the legacy Reactive Streams APIs to java.util.concurrent.Flow"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.returnTypeChanged",
+          "old": "method <T> org.reactivestreams.Publisher<T> mutiny.zero.ZeroPublisher::fromItems(T[])",
+          "new": "method <T> java.util.concurrent.Flow.Publisher<T> mutiny.zero.ZeroPublisher::fromItems(T[])",
+          "justification": "Migration from the legacy Reactive Streams APIs to java.util.concurrent.Flow"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.returnTypeChanged",
+          "old": "method <T> org.reactivestreams.Publisher<T> mutiny.zero.ZeroPublisher::fromIterable(java.lang.Iterable<T>)",
+          "new": "method <T> java.util.concurrent.Flow.Publisher<T> mutiny.zero.ZeroPublisher::fromIterable(java.lang.Iterable<T>)",
+          "justification": "Migration from the legacy Reactive Streams APIs to java.util.concurrent.Flow"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.returnTypeChanged",
+          "old": "method <T> org.reactivestreams.Publisher<T> mutiny.zero.ZeroPublisher::fromStream(java.util.function.Supplier<java.util.stream.Stream<T>>)",
+          "new": "method <T> java.util.concurrent.Flow.Publisher<T> mutiny.zero.ZeroPublisher::fromStream(java.util.function.Supplier<java.util.stream.Stream<T>>)",
+          "justification": "Migration from the legacy Reactive Streams APIs to java.util.concurrent.Flow"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.parameterTypeChanged",
+          "old": "parameter <T> java.util.concurrent.CompletionStage<java.util.Optional<T>> mutiny.zero.ZeroPublisher::toCompletionStage(===org.reactivestreams.Publisher<T>===)",
+          "new": "parameter <T> java.util.concurrent.CompletionStage<java.util.Optional<T>> mutiny.zero.ZeroPublisher::toCompletionStage(===java.util.concurrent.Flow.Publisher<T>===)",
+          "parameterIndex": "0",
+          "justification": "Migration from the legacy Reactive Streams APIs to java.util.concurrent.Flow"
+        }
+      ]
     }
   },
   {

@@ -14,12 +14,6 @@
     <description>Mutiny Zero is a minimal API for creating reactive-streams compliant publishers</description>
 
     <dependencies>
-
-        <dependency>
-            <groupId>org.reactivestreams</groupId>
-            <artifactId>reactive-streams</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>io.smallrye.reactive</groupId>
             <artifactId>mutiny</artifactId>
@@ -27,7 +21,7 @@
         </dependency>
         <dependency>
             <groupId>org.reactivestreams</groupId>
-            <artifactId>reactive-streams-tck</artifactId>
+            <artifactId>reactive-streams-tck-flow</artifactId>
             <scope>test</scope>
         </dependency>
 
@@ -70,57 +64,5 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>dev.jbang</groupId>
-                <artifactId>jbang-maven-plugin</artifactId>
-                <version>${jbang-maven-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>flowify</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <script>${project.basedir}/scripts/flowify.java</script>
-                            <args>
-                                <arg>${project.build.directory}/${project.artifactId}-${project.version}.jar</arg>
-                                <arg>${project.build.directory}/${project.artifactId}-${project.version}-jdk-flow.jar
-                                </arg>
-                            </args>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>${build-helper-maven-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>attach-artifacts</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>attach-artifact</goal>
-                        </goals>
-                        <configuration>
-                            <artifacts>
-                                <artifact>
-                                    <file>
-                                        ${project.build.directory}/${project.artifactId}-${project.version}-jdk-flow.jar
-                                    </file>
-                                    <type>jar</type>
-                                    <classifier>jdk-flow</classifier>
-                                </artifact>
-                            </artifacts>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>

@@ -1,21 +1,21 @@
 package mutiny.zero.tck;
 
 import java.util.Iterator;
+import java.util.concurrent.Flow.Publisher;
 
-import org.reactivestreams.Publisher;
-import org.reactivestreams.tck.PublisherVerification;
 import org.reactivestreams.tck.TestEnvironment;
+import org.reactivestreams.tck.flow.FlowPublisherVerification;
 
 import mutiny.zero.ZeroPublisher;
 
-public class GeneratorPublisherTckTest extends PublisherVerification<Long> {
+public class GeneratorPublisherTckTest extends FlowPublisherVerification<Long> {
 
     public GeneratorPublisherTckTest() {
         super(new TestEnvironment());
     }
 
     @Override
-    public Publisher<Long> createPublisher(long elements) {
+    public Publisher<Long> createFlowPublisher(long elements) {
         return ZeroPublisher.fromGenerator(() -> 10L, init -> new Iterator<Long>() {
 
             long current = init;
@@ -35,7 +35,7 @@ public class GeneratorPublisherTckTest extends PublisherVerification<Long> {
     }
 
     @Override
-    public Publisher<Long> createFailedPublisher() {
+    public Publisher<Long> createFailedFlowPublisher() {
         return null;
     }
 }

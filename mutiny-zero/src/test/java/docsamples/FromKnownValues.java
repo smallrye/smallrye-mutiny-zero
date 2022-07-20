@@ -4,8 +4,7 @@ import static mutiny.zero.ZeroPublisher.*;
 
 import java.io.IOException;
 import java.util.Arrays;
-
-import org.reactivestreams.Publisher;
+import java.util.concurrent.Flow.Publisher;
 
 public class FromKnownValues {
 

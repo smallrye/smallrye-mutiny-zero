@@ -1,21 +1,22 @@
 package mutiny.zero.tck;
 
-import org.reactivestreams.Publisher;
-import org.reactivestreams.tck.PublisherVerification;
+import java.util.concurrent.Flow.Publisher;
+
 import org.reactivestreams.tck.TestEnvironment;
+import org.reactivestreams.tck.flow.FlowPublisherVerification;
 
 import mutiny.zero.BackpressureStrategy;
 import mutiny.zero.TubeConfiguration;
 import mutiny.zero.ZeroPublisher;
 
-public class LatestTubePublisherTckTest extends PublisherVerification<Long> {
+public class LatestTubePublisherTckTest extends FlowPublisherVerification<Long> {
 
     public LatestTubePublisherTckTest() {
         super(new TestEnvironment());
     }
 
     @Override
-    public Publisher<Long> createPublisher(long elements) {
+    public Publisher<Long> createFlowPublisher(long elements) {
         TubeConfiguration configuration = new TubeConfiguration()
                 .withBackpressureStrategy(BackpressureStrategy.LATEST)
                 .withBufferSize(Integer.MAX_VALUE);
@@ -23,7 +24,7 @@ public class LatestTubePublisherTckTest extends PublisherVerification<Long> {
     }
 
     @Override
-    public Publisher<Long> createFailedPublisher() {
+    public Publisher<Long> createFailedFlowPublisher() {
         return null;
     }
 }

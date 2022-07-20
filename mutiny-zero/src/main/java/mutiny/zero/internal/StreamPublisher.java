@@ -2,11 +2,10 @@ package mutiny.zero.internal;
 
 import static java.util.Objects.requireNonNull;
 
+import java.util.concurrent.Flow;
+import java.util.concurrent.Flow.Publisher;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
-
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscriber;
 
 public class StreamPublisher<T> implements Publisher<T> {
 
@@ -17,7 +16,7 @@ public class StreamPublisher<T> implements Publisher<T> {
     }
 
     @Override
-    public void subscribe(Subscriber<? super T> subscriber) {
+    public void subscribe(Flow.Subscriber<? super T> subscriber) {
         requireNonNull(subscriber, "The subscriber cannot be null");
         Stream<T> stream = supplier.get();
         if (stream == null) {

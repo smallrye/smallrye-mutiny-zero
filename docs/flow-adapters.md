@@ -7,7 +7,7 @@ The `mutiny-zero-flow-adapters` library (Maven coordinates `io.smallrye.reactive
 The implementation of our adapters is similar in spirit to [those from the Reactive Streams library](https://github.com/reactive-streams/reactive-streams-jvm/tree/master/api/src/main/java9/org/reactivestreams), but they differ by:
 
 - failing early rather than passing `null` through in some cases,
-- shipping under a [proper open source license](https://www.apache.org/licenses/LICENSE-2.0) while the Reactive Streams library hasn't made any progress towards publishing a new release, see [#536](https://github.com/reactive-streams/reactive-streams-jvm/issues/536) and [#530](https://github.com/reactive-streams/reactive-streams-jvm/issues/530) 
+- shipping under a [proper open source license](https://www.apache.org/licenses/LICENSE-2.0) while the Reactive Streams library took a long time to make any progress towards publishing a new release, see [#536](https://github.com/reactive-streams/reactive-streams-jvm/issues/536) and [#530](https://github.com/reactive-streams/reactive-streams-jvm/issues/530) 
 - having correct JPMS (Java modules) descriptors for those who might need modules rather than the classpath.
 
 ## How to use it?

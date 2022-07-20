@@ -1,15 +1,14 @@
 package mutiny.zero.internal;
 
 import java.util.Queue;
+import java.util.concurrent.Flow;
 import java.util.concurrent.LinkedBlockingDeque;
-
-import org.reactivestreams.Subscriber;
 
 public class LatestTube<T> extends BufferingTubeBase<T> {
 
     private final LinkedBlockingDeque<T> overflowQueue;
 
-    public LatestTube(Subscriber<? super T> subscriber, int bufferSize) {
+    public LatestTube(Flow.Subscriber<? super T> subscriber, int bufferSize) {
         super(subscriber, bufferSize);
         overflowQueue = new LinkedBlockingDeque<>(bufferSize);
     }

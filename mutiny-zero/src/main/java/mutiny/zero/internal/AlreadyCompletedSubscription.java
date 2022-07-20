@@ -1,8 +1,8 @@
 package mutiny.zero.internal;
 
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow;
 
-public class AlreadyCompletedSubscription implements Subscription {
+public class AlreadyCompletedSubscription implements Flow.Subscription {
 
     @Override
     public void request(long n) {

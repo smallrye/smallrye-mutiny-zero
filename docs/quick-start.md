@@ -7,9 +7,7 @@ You can get Mutiny Zero through the following Maven coordinates:
 * `groupId`: `io.smallrye.reactive`
 * `artifactId`: `mutiny-zero`
   
-Mutiny Zero exposes publishers from the _reactive streams_ library.
-
-If you are interested in exposing JDK Flow publishers then you can use the `jdk-flow` _classifier_ which is free from any dependency to the _reactive streams_ library.
+Mutiny Zero exposes publishers (see [`java.util.concurrent.Flow`](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/Flow.html)).
 
 ## Creating publishers
 

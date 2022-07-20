@@ -1,9 +1,8 @@
 package mutiny.zero.internal;
 
 import java.util.Queue;
+import java.util.concurrent.Flow.Subscriber;
 import java.util.concurrent.LinkedBlockingDeque;
-
-import org.reactivestreams.Subscriber;
 
 public class BufferingTube<T> extends BufferingTubeBase<T> {
 

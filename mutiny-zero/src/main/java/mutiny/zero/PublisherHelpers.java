@@ -6,11 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
+import java.util.concurrent.Flow;
+import java.util.concurrent.Flow.Publisher;
+import java.util.concurrent.Flow.Subscriber;
 import java.util.function.Function;
-
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
 
 import mutiny.zero.internal.MapOperator;
 
@@ -28,7 +27,7 @@ public interface PublisherHelpers {
         CompletableFuture<List<T>> future = new CompletableFuture<>();
         publisher.subscribe(new Subscriber<T>() {
             @Override
-            public void onSubscribe(Subscription subscription) {
+            public void onSubscribe(Flow.Subscription subscription) {
                 subscription.request(Long.MAX_VALUE);
             }
 

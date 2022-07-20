@@ -1,9 +1,10 @@
 package mutiny.zero;
 
+import java.util.concurrent.Flow;
 import java.util.function.LongConsumer;
 
 /**
- * A {@link Tube} is a general-purpose abstraction for creating {@link org.reactivestreams.Publisher}.
+ * A {@link Tube} is a general-purpose abstraction for creating {@link Flow.Publisher}.
  * <p>
  * Items, errors and completion signals can be sent using this interface.
  * It is possible to be notified of requests, cancellations and termination.
@@ -11,7 +12,7 @@ import java.util.function.LongConsumer;
  * A {@link Tube} can be shared between multiple threads, and sending items from concurrent threads is done serially as
  * per reactive stream semantics.
  * <p>
- * If in doubt about which abstraction to use for creating a {@link org.reactivestreams.Publisher} with
+ * If in doubt about which abstraction to use for creating a {@link Flow.Publisher} with
  * {@link ZeroPublisher} then choose a {@link Tube}.
  *
  * @param <T> the items type

@@ -1,15 +1,14 @@
 package mutiny.zero.internal;
 
 import java.util.Queue;
-
-import org.reactivestreams.Subscriber;
+import java.util.concurrent.Flow;
 
 public abstract class BufferingTubeBase<T> extends TubeBase<T> {
 
     private final int bufferSize;
     protected boolean delayedComplete = false;
 
-    public BufferingTubeBase(Subscriber<? super T> subscriber, int bufferSize) {
+    public BufferingTubeBase(Flow.Subscriber<? super T> subscriber, int bufferSize) {
         super(subscriber);
         this.bufferSize = bufferSize;
     }

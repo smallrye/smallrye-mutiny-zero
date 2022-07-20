@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -60,7 +61,7 @@
     <properties>
         <reactive-streams.version>1.0.4</reactive-streams.version>
 
-        <mutiny.version>1.6.0</mutiny.version>
+        <mutiny.version>2.0.0-milestone1</mutiny.version>
         <awaitility.version>4.2.0</awaitility.version>
         <assertj-core.version>3.23.1</assertj-core.version>
 
@@ -68,9 +69,6 @@
         <testng.version>7.6.1</testng.version>
         <testng-junit5-engine.version>1.0.4</testng-junit5-engine.version>
         <logback-classic.version>1.2.11</logback-classic.version>
-
-        <jbang-maven-plugin.version>0.0.7</jbang-maven-plugin.version>
-        <build-helper-maven-plugin.version>3.3.0</build-helper-maven-plugin.version>
 
         <revapi-maven-plugin.version>0.14.7</revapi-maven-plugin.version>
         <revapi-java.version>0.27.0</revapi-java.version>
@@ -98,6 +96,12 @@
             <dependency>
                 <groupId>org.reactivestreams</groupId>
                 <artifactId>reactive-streams-tck</artifactId>
+                <version>${reactive-streams.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.reactivestreams</groupId>
+                <artifactId>reactive-streams-tck-flow</artifactId>
                 <version>${reactive-streams.version}</version>
                 <scope>test</scope>
             </dependency>
