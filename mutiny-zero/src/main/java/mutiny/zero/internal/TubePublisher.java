@@ -2,10 +2,9 @@ package mutiny.zero.internal;
 
 import static java.util.Objects.requireNonNull;
 
+import java.util.concurrent.Flow;
+import java.util.concurrent.Flow.Publisher;
 import java.util.function.Consumer;
-
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscriber;
 
 import mutiny.zero.BackpressureStrategy;
 import mutiny.zero.Tube;
@@ -24,7 +23,7 @@ public class TubePublisher<T> implements Publisher<T> {
     }
 
     @Override
-    public void subscribe(Subscriber<? super T> subscriber) {
+    public void subscribe(Flow.Subscriber<? super T> subscriber) {
         requireNonNull(subscriber, "The subscriber cannot be null");
         TubeBase<T> tube = null;
         switch (backpressureStrategy) {

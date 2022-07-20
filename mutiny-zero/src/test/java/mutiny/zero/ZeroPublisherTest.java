@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
@@ -20,7 +21,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.reactivestreams.Publisher;
 
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.helpers.test.AssertSubscriber;
@@ -255,7 +255,7 @@ class ZeroPublisherTest {
         @DisplayName("Items from a stream (unbounded)")
         void unbounded() {
             Supplier<Stream<Integer>> supplier = () -> IntStream.range(1, 5).boxed();
-            Publisher<Integer> publisher = ZeroPublisher.fromStream(supplier);
+            Flow.Publisher<Integer> publisher = ZeroPublisher.fromStream(supplier);
 
             for (int i = 0; i < 3; i++) {
                 AssertSubscriber<Object> sub = AssertSubscriber.create(Long.MAX_VALUE);
@@ -881,7 +881,7 @@ class ZeroPublisherTest {
         void badReq() {
             TubeConfiguration configuration = new TubeConfiguration()
                     .withBackpressureStrategy(BackpressureStrategy.DROP);
-            Publisher<Object> publisher = ZeroPublisher.create(configuration, tube -> {
+            Flow.Publisher<Object> publisher = ZeroPublisher.create(configuration, tube -> {
                 // Nothing here
             });
 

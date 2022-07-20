@@ -1,10 +1,10 @@
 package mutiny.zero.internal;
 
-import org.reactivestreams.Subscriber;
+import java.util.concurrent.Flow;
 
 public class DroppingTube<T> extends TubeBase<T> {
 
-    protected DroppingTube(Subscriber<? super T> subscriber) {
+    protected DroppingTube(Flow.Subscriber<? super T> subscriber) {
         super(subscriber);
     }
 

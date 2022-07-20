@@ -1,27 +1,27 @@
 package mutiny.zero.tck;
 
+import java.util.concurrent.Flow;
 import java.util.stream.LongStream;
 
-import org.reactivestreams.Publisher;
-import org.reactivestreams.tck.PublisherVerification;
 import org.reactivestreams.tck.TestEnvironment;
+import org.reactivestreams.tck.flow.FlowPublisherVerification;
 
 import mutiny.zero.ZeroPublisher;
 
-public class IterablePublisherTckTest extends PublisherVerification<Long> {
+public class IterablePublisherTckTest extends FlowPublisherVerification<Long> {
 
     public IterablePublisherTckTest() {
         super(new TestEnvironment());
     }
 
     @Override
-    public Publisher<Long> createPublisher(long elements) {
+    public Flow.Publisher<Long> createFlowPublisher(long elements) {
         Long[] list = LongStream.rangeClosed(1, elements).boxed().toArray(Long[]::new);
         return ZeroPublisher.fromItems(list);
     }
 
     @Override
-    public Publisher<Long> createFailedPublisher() {
+    public Flow.Publisher<Long> createFailedFlowPublisher() {
         return null;
     }
 

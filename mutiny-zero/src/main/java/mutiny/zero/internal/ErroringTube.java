@@ -1,6 +1,6 @@
 package mutiny.zero.internal;
 
-import org.reactivestreams.Subscriber;
+import java.util.concurrent.Flow.Subscriber;
 
 public class ErroringTube<T> extends TubeBase<T> {
 

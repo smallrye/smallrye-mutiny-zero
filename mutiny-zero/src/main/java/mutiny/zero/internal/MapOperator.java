@@ -1,12 +1,11 @@
 package mutiny.zero.internal;
 
 import java.util.Objects;
+import java.util.concurrent.Flow.Processor;
+import java.util.concurrent.Flow.Publisher;
+import java.util.concurrent.Flow.Subscriber;
+import java.util.concurrent.Flow.Subscription;
 import java.util.function.Function;
-
-import org.reactivestreams.Processor;
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
 
 public class MapOperator<I, O> implements Publisher<O> {
 

@@ -1,10 +1,10 @@
 package mutiny.zero.internal;
 
-import org.reactivestreams.Subscriber;
+import java.util.concurrent.Flow;
 
 public class IgnoringTube<T> extends TubeBase<T> {
 
-    public IgnoringTube(Subscriber<? super T> subscriber) {
+    public IgnoringTube(Flow.Subscriber<? super T> subscriber) {
         super(subscriber);
     }
 

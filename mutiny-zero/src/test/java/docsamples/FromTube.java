@@ -2,7 +2,7 @@ package docsamples;
 
 import static mutiny.zero.ZeroPublisher.create;
 
-import org.reactivestreams.Publisher;
+import java.util.concurrent.Flow.Publisher;
 
 import mutiny.zero.BackpressureStrategy;
 import mutiny.zero.TubeConfiguration;

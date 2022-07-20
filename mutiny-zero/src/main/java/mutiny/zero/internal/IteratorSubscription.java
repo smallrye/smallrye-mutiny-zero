@@ -1,10 +1,9 @@
 package mutiny.zero.internal;
 
 import java.util.Iterator;
+import java.util.concurrent.Flow.Subscriber;
+import java.util.concurrent.Flow.Subscription;
 import java.util.concurrent.atomic.AtomicLong;
-
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
 
 class IteratorSubscription<T> implements Subscription {
 

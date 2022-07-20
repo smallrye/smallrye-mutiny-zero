@@ -2,8 +2,8 @@ package mutiny.zero.internal;
 
 import static java.util.Objects.requireNonNull;
 
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscriber;
+import java.util.concurrent.Flow.Publisher;
+import java.util.concurrent.Flow.Subscriber;
 
 public class IterablePublisher<T> implements Publisher<T> {
 

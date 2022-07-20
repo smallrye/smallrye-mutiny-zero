@@ -3,13 +3,11 @@ package mutiny.zero.internal;
 import static java.util.Objects.requireNonNull;
 
 import java.util.Iterator;
+import java.util.concurrent.Flow;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscriber;
-
-public class GeneratorPublisher<S, T> implements Publisher<T> {
+public class GeneratorPublisher<S, T> implements Flow.Publisher<T> {
 
     private final Supplier<S> stateSupplier;
     private final Function<S, Iterator<T>> generator;
@@ -20,7 +18,7 @@ public class GeneratorPublisher<S, T> implements Publisher<T> {
     }
 
     @Override
-    public void subscribe(Subscriber<? super T> subscriber) {
+    public void subscribe(Flow.Subscriber<? super T> subscriber) {
         requireNonNull(subscriber, "The subscriber cannot be null");
         Iterator<T> iterator = generator.apply(stateSupplier.get());
         if (iterator == null) {

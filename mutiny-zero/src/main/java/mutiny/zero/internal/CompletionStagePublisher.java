@@ -5,12 +5,11 @@ import static java.util.Objects.requireNonNull;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Flow;
+import java.util.concurrent.Flow.Publisher;
+import java.util.concurrent.Flow.Subscriber;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
-
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
 
 public class CompletionStagePublisher<T> implements Publisher<T> {
 
@@ -50,7 +49,7 @@ public class CompletionStagePublisher<T> implements Publisher<T> {
         }
     }
 
-    private class CompletionStageSubscription implements Subscription {
+    private class CompletionStageSubscription implements Flow.Subscription {
 
         private final Subscriber<? super T> subscriber;
         private final CompletableFuture<T> completableFuture;

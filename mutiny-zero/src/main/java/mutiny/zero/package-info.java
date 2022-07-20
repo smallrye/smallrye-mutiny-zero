@@ -1,7 +1,7 @@
 /**
- * Mutiny Zero is minimal API for creating reactive streams compliant {@link org.reactivestreams.Publisher} objects.
+ * Mutiny Zero is minimal API for creating reactive streams compliant {@link java.util.concurrent.Flow.Publisher} objects.
  * <p>
- * {@link mutiny.zero.ZeroPublisher} offers factory methods for creating {@link org.reactivestreams.Publisher},
+ * {@link mutiny.zero.ZeroPublisher} offers factory methods for creating {@link java.util.concurrent.Flow.Publisher},
  * with the {@link mutiny.zero.Tube} API and the
  * {@link mutiny.zero.ZeroPublisher#create(mutiny.zero.BackpressureStrategy, int, java.util.function.Consumer)}
  * factory method being the safe, general-purpose choice.

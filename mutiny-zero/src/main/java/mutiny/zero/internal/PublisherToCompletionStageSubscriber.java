@@ -2,23 +2,22 @@ package mutiny.zero.internal;
 
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Flow;
+import java.util.concurrent.Flow.Subscriber;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
 
 public class PublisherToCompletionStageSubscriber<T> implements Subscriber<T> {
 
     private final CompletableFuture<Optional<T>> future;
     private final AtomicBoolean completed = new AtomicBoolean();
-    private Subscription subscription;
+    private Flow.Subscription subscription;
 
     public PublisherToCompletionStageSubscriber(CompletableFuture<Optional<T>> future) {
         this.future = future;
     }
 
     @Override
-    public void onSubscribe(Subscription subscription) {
+    public void onSubscribe(Flow.Subscription subscription) {
         this.subscription = subscription;
         subscription.request(1L);
     }
