@@ -2,7 +2,7 @@
 
 Mutiny Zero is a minimal API for creating [reactive streams](https://www.reactive-streams.org) compliant publishers.
 
-It weights less than 50K and has 0 external dependency beyond the _reactive streams_ API (or [Java Flow](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/Flow.html)).
+It weights less than 50K and has 0 external dependency as it uses the [Java Flow APIs](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/Flow.html)).
 
 ## What are reactive streams?
 
@@ -31,7 +31,7 @@ The reactive streams interfaces are quite simple, so where is the catch?
 In a perfect world middleware and service vendors would _simply_ implement these interfaces and ship client libraries.
 **The problem with reactive streams is not the interfaces: the protocol is the hard part.**
 
-[Reactive streams come with a specification](https://github.com/reactive-streams/reactive-streams-jvm/blob/v1.0.3/README.md#specification) and a [TCK to check for publishers, processors and subscribers conformance](https://github.com/reactive-streams/reactive-streams-jvm/tree/v1.0.3/tck).
+[Reactive streams come with a specification](https://github.com/reactive-streams/reactive-streams-jvm/blob/v1.0.4/README.md#specification) and a [TCK to check for publishers, processors and subscribers conformance](https://github.com/reactive-streams/reactive-streams-jvm/tree/v1.0.4/tck).
 There are many subtle rules that the TCK verifies, and it can be surprisingly hard to respect all of them.
 
 Of course one may be tempted to just ignore some rules and just focus on the Java interfaces, but then combining reactive bits will likely break at runtime due to back-pressure and/or threading problems.
@@ -49,9 +49,9 @@ We dived into the code of several reactive streams client libraries, and we foun
 
 This is a major problem because strong adherence to a complete reactive programming library annihilates the benefits of the reactive streams specification:
 
-* applications may want to use a different reactive programming library than the one chosen by a vendor, bringing unwanted dependencies (who needs 3 reactive programming libraries in their code base?), 
-* vendors become bound to the release cycle of the chosen reactive programming library,
-* conflicts between versions are more likely to happen because different vendors may depend on incompatible versions of a given reactive programming library.
+- applications may want to use a different reactive programming library than the one chosen by a vendor, bringing unwanted dependencies (who needs 3 reactive programming libraries in their code base?), 
+- vendors become bound to the release cycle of the chosen reactive programming library,
+- conflicts between versions are more likely to happen because different vendors may depend on incompatible versions of a given reactive programming library.
 
 ## The promise of Mutiny Zero
 
