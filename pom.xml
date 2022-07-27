@@ -65,7 +65,7 @@
         <awaitility.version>4.2.0</awaitility.version>
         <assertj-core.version>3.23.1</assertj-core.version>
 
-        <junit-jupiter.version>5.8.2</junit-jupiter.version>
+        <junit-jupiter.version>5.9.0</junit-jupiter.version>
         <testng.version>7.6.1</testng.version>
         <testng-junit5-engine.version>1.0.4</testng-junit5-engine.version>
         <logback-classic.version>1.2.11</logback-classic.version>
