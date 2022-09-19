@@ -123,6 +123,15 @@
           "new": "parameter <T> java.util.concurrent.CompletionStage<java.util.Optional<T>> mutiny.zero.ZeroPublisher::toCompletionStage(===java.util.concurrent.Flow.Publisher<T>===)",
           "parameterIndex": "0",
           "justification": "Migration from the legacy Reactive Streams APIs to java.util.concurrent.Flow"
+        },
+        {
+          "ignore": true,
+          "code": "java.annotation.attributeAdded",
+          "old": "method <T> org.reactivestreams.Publisher<T> mutiny.zero.ZeroPublisher::create(mutiny.zero.BackpressureStrategy, int, java.util.function.Consumer<mutiny.zero.Tube<T>>)",
+          "new": "method <T> java.util.concurrent.Flow.Publisher<T> mutiny.zero.ZeroPublisher::create(mutiny.zero.BackpressureStrategy, int, java.util.function.Consumer<mutiny.zero.Tube<T>>)",
+          "annotation": "@java.lang.Deprecated(forRemoval = true)",
+          "attribute": "forRemoval",
+          "justification": "Deprecation for removal"
         }
       ]
     }
