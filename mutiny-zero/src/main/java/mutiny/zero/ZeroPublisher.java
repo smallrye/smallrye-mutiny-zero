@@ -176,7 +176,7 @@ public interface ZeroPublisher {
      * @return a new {@link Publisher}
      * @deprecated Use {@link #create(TubeConfiguration, Consumer)} instead
      */
-    @Deprecated
+    @Deprecated(forRemoval = true)
     static <T> Publisher<T> create(BackpressureStrategy backpressureStrategy, int bufferSize, Consumer<Tube<T>> tubeConsumer) {
         TubeConfiguration configuration = new TubeConfiguration()
                 .withBackpressureStrategy(backpressureStrategy)
