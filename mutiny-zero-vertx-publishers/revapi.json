@@ -16,7 +16,7 @@
         "include": [
           {
             "matcher": "java-package",
-            "match": "mutiny.zero.flow.adapters"
+            "match": "mutiny.zero.vertxpublishers"
           }
         ]
       }
