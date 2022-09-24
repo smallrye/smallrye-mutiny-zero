@@ -20,6 +20,7 @@
     <modules>
         <module>mutiny-zero</module>
         <module>mutiny-zero-flow-adapters</module>
+        <module>mutiny-zero-vertx-publishers</module>
         <module>mutiny-zero-reactive-streams-junit5-tck</module>
     </modules>
 
@@ -62,6 +63,8 @@
         <reactive-streams.version>1.0.4</reactive-streams.version>
 
         <mutiny.version>2.0.0-milestone2</mutiny.version>
+        <vertx.version>4.3.3</vertx.version>
+
         <awaitility.version>4.2.0</awaitility.version>
         <assertj-core.version>3.23.1</assertj-core.version>
 
