@@ -5,12 +5,10 @@ import java.util.concurrent.Flow;
 
 public abstract class BufferingTubeBase<T> extends TubeBase<T> {
 
-    private final int bufferSize;
     protected boolean delayedComplete = false;
 
-    public BufferingTubeBase(Flow.Subscriber<? super T> subscriber, int bufferSize) {
+    public BufferingTubeBase(Flow.Subscriber<? super T> subscriber) {
         super(subscriber);
-        this.bufferSize = bufferSize;
     }
 
     abstract Queue<T> overflowQueue();

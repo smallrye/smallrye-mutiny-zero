@@ -9,7 +9,7 @@ public class BufferingTube<T> extends BufferingTubeBase<T> {
     private final LinkedBlockingDeque<T> overflowQueue;
 
     public BufferingTube(Subscriber<? super T> subscriber, int bufferSize) {
-        super(subscriber, bufferSize);
+        super(subscriber);
         overflowQueue = new LinkedBlockingDeque<>(bufferSize);
     }
 

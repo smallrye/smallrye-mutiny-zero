@@ -302,7 +302,7 @@ class ZeroPublisherTest {
         @Test
         @DisplayName("Null values")
         void fromNull() {
-            Iterator<String> infiniteYolo = new Iterator<String>() {
+            Iterator<String> infiniteYolo = new Iterator<>() {
                 @Override
                 public boolean hasNext() {
                     return true;

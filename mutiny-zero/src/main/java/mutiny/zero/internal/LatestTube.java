@@ -9,7 +9,7 @@ public class LatestTube<T> extends BufferingTubeBase<T> {
     private final LinkedBlockingDeque<T> overflowQueue;
 
     public LatestTube(Flow.Subscriber<? super T> subscriber, int bufferSize) {
-        super(subscriber, bufferSize);
+        super(subscriber);
         overflowQueue = new LinkedBlockingDeque<>(bufferSize);
     }
 

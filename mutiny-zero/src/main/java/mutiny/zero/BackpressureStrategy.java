@@ -2,7 +2,7 @@ package mutiny.zero;
 
 /**
  * Define a {@link Tube} back-pressure management strategy.
- * 
+ * <p>
  * A {@link Tube} back-pressure management is required when an item is sent to a {@link Tube} while there are no
  * outstanding items being requested.
  */
