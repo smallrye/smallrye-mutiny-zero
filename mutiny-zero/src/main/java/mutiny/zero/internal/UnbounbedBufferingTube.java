@@ -9,7 +9,7 @@ public class UnbounbedBufferingTube<T> extends BufferingTubeBase<T> {
     private final ConcurrentLinkedQueue<T> overflowQueue;
 
     public UnbounbedBufferingTube(Flow.Subscriber<? super T> subscriber) {
-        super(subscriber, -1);
+        super(subscriber);
         overflowQueue = new ConcurrentLinkedQueue<>();
     }
 

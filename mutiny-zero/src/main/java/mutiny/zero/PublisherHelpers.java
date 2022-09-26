@@ -25,7 +25,7 @@ public interface PublisherHelpers {
     static <T> CompletionStage<List<T>> collectToList(Publisher<T> publisher) {
         List<T> list = new ArrayList<>();
         CompletableFuture<List<T>> future = new CompletableFuture<>();
-        publisher.subscribe(new Subscriber<T>() {
+        publisher.subscribe(new Subscriber<>() {
             @Override
             public void onSubscribe(Flow.Subscription subscription) {
                 subscription.request(Long.MAX_VALUE);

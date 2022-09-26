@@ -41,7 +41,7 @@ class AdaptersSmokeTest {
         AtomicReference<Throwable> failure = new AtomicReference<>();
 
         Publisher<String> rsPublisher = AdaptersToReactiveStreams.publisher(publisher);
-        rsPublisher.subscribe(new Subscriber<String>() {
+        rsPublisher.subscribe(new Subscriber<>() {
             @Override
             public void onSubscribe(Subscription s) {
                 s.request(Long.MAX_VALUE);

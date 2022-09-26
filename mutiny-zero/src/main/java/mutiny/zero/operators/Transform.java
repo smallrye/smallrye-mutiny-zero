@@ -24,7 +24,6 @@ public class Transform<I, O> implements Flow.Publisher<O> {
      */
     public Transform(Flow.Publisher<I> upstream, Function<I, O> function) {
         this.upstream = requireNonNull(upstream, "The upstream cannot be null");
-        ;
         this.function = requireNonNull(function, "The function cannot be null");
     }
 
