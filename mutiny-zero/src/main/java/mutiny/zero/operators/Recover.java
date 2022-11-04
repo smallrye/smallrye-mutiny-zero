@@ -17,7 +17,7 @@ import java.util.function.Function;
  * <p>
  * The stream ends with an error if the function throws an exception.
  *
- * @param <T> the elements types
+ * @param <T> the elements type
  */
 public class Recover<T> implements Flow.Publisher<T> {
 
