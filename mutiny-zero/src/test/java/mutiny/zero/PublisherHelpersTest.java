@@ -7,45 +7,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import io.smallrye.mutiny.helpers.test.AssertSubscriber;
-
 class PublisherHelpersTest {
-
-    @Nested
-    @DisplayName("Simple map operator")
-    class Map {
-
-        @Test
-        @DisplayName("Map values")
-        void map() {
-            AssertSubscriber<Integer> sub = AssertSubscriber.create(Long.MAX_VALUE);
-            PublisherHelpers.map(ZeroPublisher.fromItems(1, 2, 3), n -> n * 10).subscribe(sub);
-            sub.assertCompleted().assertItems(10, 20, 30);
-        }
-
-        @Test
-        @DisplayName("Mapper fails")
-        void mapFail() {
-            AssertSubscriber<Object> sub = AssertSubscriber.create(Long.MAX_VALUE);
-            PublisherHelpers.map(ZeroPublisher.fromItems(1, 2, 3), n -> {
-                throw new RuntimeException("boom");
-            }).subscribe(sub);
-            sub.assertFailedWith(RuntimeException.class, "boom");
-        }
-
-        @Test
-        @DisplayName("Null mapper")
-        void nullMapper() {
-            AssertSubscriber<Object> sub = AssertSubscriber.create(Long.MAX_VALUE);
-            Assertions.assertThrows(NullPointerException.class,
-                    () -> PublisherHelpers.map(ZeroPublisher.fromItems(1, 2, 3), null).subscribe(sub));
-        }
-    }
 
     @Nested
     @DisplayName("Collect all items to a list")

@@ -132,6 +132,32 @@
           "annotation": "@java.lang.Deprecated(forRemoval = true)",
           "attribute": "forRemoval",
           "justification": "Deprecation for removal"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.removed",
+          "old": "method <T> java.util.concurrent.CompletionStage<T> mutiny.zero.AsyncHelpers::failedFuture(java.lang.Throwable)",
+          "justification": "Deprecated method removal"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.removed",
+          "old": "method <I, O> org.reactivestreams.Publisher<O> mutiny.zero.PublisherHelpers::map(org.reactivestreams.Publisher<I>, java.util.function.Function<I, O>)",
+          "justification": "Deprecated method removal"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.numberOfParametersChanged",
+          "old": "method <T> org.reactivestreams.Publisher<T> mutiny.zero.ZeroPublisher::create(mutiny.zero.BackpressureStrategy, int, java.util.function.Consumer<mutiny.zero.Tube<T>>)",
+          "new": "method <T> java.util.concurrent.Flow.Publisher<T> mutiny.zero.ZeroPublisher::create(mutiny.zero.TubeConfiguration, java.util.function.Consumer<mutiny.zero.Tube<T>>)",
+          "justification": "Deprecated method removal"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.returnTypeChanged",
+          "old": "method <T> org.reactivestreams.Publisher<T> mutiny.zero.ZeroPublisher::create(mutiny.zero.BackpressureStrategy, int, java.util.function.Consumer<mutiny.zero.Tube<T>>)",
+          "new": "method <T> java.util.concurrent.Flow.Publisher<T> mutiny.zero.ZeroPublisher::create(mutiny.zero.TubeConfiguration, java.util.function.Consumer<mutiny.zero.Tube<T>>)",
+          "justification": "Deprecated method removal"
         }
       ]
     }

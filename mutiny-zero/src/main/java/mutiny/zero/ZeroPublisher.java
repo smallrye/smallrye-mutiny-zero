@@ -20,7 +20,7 @@ import mutiny.zero.internal.*;
  * <p>
  * There are convenience methods for creating {@link Publisher} from in-memory data.
  * <p>
- * The general-purpose abstraction is to use a {@link Tube} and the {@link #create(BackpressureStrategy, int, Consumer)}
+ * The general-purpose abstraction is to use a {@link Tube} and the {@link #create(TubeConfiguration, Consumer)}
  * factory method.
  */
 public interface ZeroPublisher {
@@ -165,22 +165,4 @@ public interface ZeroPublisher {
         return new TubePublisher<>(configuration, tubeConsumer);
     }
 
-    /**
-     * Create a new {@link Publisher} with the general-purpose {@link Tube} API.
-     *
-     * @param backpressureStrategy the back-pressure strategy, cannot be {@code null}
-     * @param bufferSize the buffer size, must be strictly positive when {@code backpressureStrategy} is one of
-     *        {@link BackpressureStrategy#BUFFER} and {@link BackpressureStrategy#LATEST}
-     * @param tubeConsumer the tube consumer, cannot be {@code null}
-     * @param <T> the items type
-     * @return a new {@link Publisher}
-     * @deprecated Use {@link #create(TubeConfiguration, Consumer)} instead
-     */
-    @Deprecated(forRemoval = true)
-    static <T> Publisher<T> create(BackpressureStrategy backpressureStrategy, int bufferSize, Consumer<Tube<T>> tubeConsumer) {
-        TubeConfiguration configuration = new TubeConfiguration()
-                .withBackpressureStrategy(backpressureStrategy)
-                .withBufferSize(bufferSize);
-        return create(configuration, tubeConsumer);
-    }
 }

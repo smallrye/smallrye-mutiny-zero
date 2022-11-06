@@ -8,22 +8,6 @@ import java.util.function.Function;
 public interface AsyncHelpers {
 
     /**
-     * Creates a failed completion stage.
-     *
-     * @param t the failure
-     * @param <T> the emitted type
-     * @return the failed completion stage.
-     * @deprecated Use {@link CompletableFuture#failedFuture(Throwable)} instead, this helper method was here while Java 8
-     *             compatibility was required.
-     */
-    @Deprecated(forRemoval = true, since = "0.5.0")
-    static <T> CompletionStage<T> failedFuture(Throwable t) {
-        CompletableFuture<T> future = new CompletableFuture<>();
-        future.completeExceptionally(t);
-        return future;
-    }
-
-    /**
      * Applies a function on failure to produce another failure.
      *
      * @param upstream the upstream stage.
