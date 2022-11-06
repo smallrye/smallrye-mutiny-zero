@@ -1,0 +1,7 @@
+module:mutiny.zero
+mutiny.zero
+mutiny.zero.operators
+module:mutiny.zero.flow.adapters
+mutiny.zero.flow.adapters
+module:mutiny.zero.vertxpublishers
+mutiny.zero.vertxpublishers
