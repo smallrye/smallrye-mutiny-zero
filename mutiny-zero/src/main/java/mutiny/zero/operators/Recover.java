@@ -32,7 +32,6 @@ public class Recover<T> implements Flow.Publisher<T> {
      */
     public Recover(Flow.Publisher<T> upstream, Function<Throwable, T> function) {
         this.upstream = requireNonNull(upstream, "The upstream cannot be null");
-        ;
         this.function = requireNonNull(function, "The function cannot be null");
     }
 

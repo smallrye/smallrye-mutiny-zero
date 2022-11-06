@@ -1,7 +1,6 @@
 package mutiny.zero.operators;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.concurrent.Flow;
 

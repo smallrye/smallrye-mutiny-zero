@@ -27,7 +27,7 @@ public class Retry<T> implements Flow.Publisher<T> {
         if (count <= 0) {
             throw new IllegalArgumentException("count must be strictly positive");
         }
-        return new Predicate<Throwable>() {
+        return new Predicate<>() {
             int n;
 
             @Override
