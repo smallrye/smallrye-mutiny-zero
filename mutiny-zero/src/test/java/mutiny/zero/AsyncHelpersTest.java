@@ -19,7 +19,7 @@ class AsyncHelpersTest {
         AtomicReference<Object> value = new AtomicReference<>();
         AtomicReference<Throwable> error = new AtomicReference<>();
 
-        CompletableFuture<?> future = AsyncHelpers.failedFuture(new IOException("boom")).toCompletableFuture();
+        CompletableFuture<?> future = CompletableFuture.failedFuture(new IOException("boom"));
         assertTrue(future.isCompletedExceptionally());
         future.whenComplete((v, err) -> {
             value.set(v);
@@ -60,7 +60,7 @@ class AsyncHelpersTest {
             AtomicReference<Object> value = new AtomicReference<>();
             AtomicReference<Throwable> error = new AtomicReference<>();
 
-            CompletableFuture<?> future = AsyncHelpers.failedFuture(new IOException("boom")).toCompletableFuture();
+            CompletableFuture<?> future = CompletableFuture.failedFuture(new IOException("boom"));
             AsyncHelpers
                     .applyExceptionally(future, err -> new RuntimeException("!!! " + err.getMessage()))
                     .whenComplete((n, err) -> {
@@ -80,7 +80,7 @@ class AsyncHelpersTest {
             AtomicReference<Object> value = new AtomicReference<>();
             AtomicReference<Throwable> error = new AtomicReference<>();
 
-            CompletableFuture<?> future = AsyncHelpers.failedFuture(new IOException("boom")).toCompletableFuture();
+            CompletableFuture<?> future = CompletableFuture.failedFuture(new IOException("boom"));
             AsyncHelpers
                     .applyExceptionally(future, err -> {
                         throw new RuntimeException("!!! " + err.getMessage());
@@ -99,7 +99,7 @@ class AsyncHelpersTest {
         @Test
         @DisplayName("applyExceptionally with a null mapper")
         void applyExceptionallyWithNullMapper() {
-            CompletableFuture<?> future = AsyncHelpers.failedFuture(new IOException("boom")).toCompletableFuture();
+            CompletableFuture<?> future = CompletableFuture.failedFuture(new IOException("boom"));
             assertThrows(NullPointerException.class, () -> AsyncHelpers.applyExceptionally(future, null));
         }
     }
@@ -117,7 +117,7 @@ class AsyncHelpersTest {
             CompletableFuture<Integer> future = CompletableFuture.completedFuture(58);
             AsyncHelpers
                     .composeExceptionally(future,
-                            err -> AsyncHelpers.failedFuture(new RuntimeException("!!! " + err.getMessage())))
+                            err -> CompletableFuture.failedFuture(new RuntimeException("!!! " + err.getMessage())))
                     .whenComplete((n, err) -> {
                         value.set(n);
                         error.set(err);
@@ -133,10 +133,10 @@ class AsyncHelpersTest {
             AtomicReference<Object> value = new AtomicReference<>();
             AtomicReference<Throwable> error = new AtomicReference<>();
 
-            CompletionStage<Object> future = AsyncHelpers.failedFuture(new IOException("boom"));
+            CompletionStage<Object> future = CompletableFuture.failedFuture(new IOException("boom"));
             AsyncHelpers
                     .composeExceptionally(future,
-                            err -> AsyncHelpers.failedFuture(new RuntimeException("!!! " + err.getMessage())))
+                            err -> CompletableFuture.failedFuture(new RuntimeException("!!! " + err.getMessage())))
                     .whenComplete((n, err) -> {
                         value.set(n);
                         error.set(err);
@@ -154,7 +154,7 @@ class AsyncHelpersTest {
             AtomicReference<Object> value = new AtomicReference<>();
             AtomicReference<Throwable> error = new AtomicReference<>();
 
-            CompletionStage<Object> future = AsyncHelpers.failedFuture(new IOException("boom"));
+            CompletionStage<Object> future = CompletableFuture.failedFuture(new IOException("boom"));
             AsyncHelpers
                     .composeExceptionally(future, err -> CompletableFuture.completedFuture("Ok"))
                     .whenComplete((n, err) -> {
@@ -172,7 +172,7 @@ class AsyncHelpersTest {
             AtomicReference<Object> value = new AtomicReference<>();
             AtomicReference<Throwable> error = new AtomicReference<>();
 
-            CompletableFuture<?> future = AsyncHelpers.failedFuture(new IOException("boom")).toCompletableFuture();
+            CompletableFuture<?> future = CompletableFuture.failedFuture(new IOException("boom"));
             AsyncHelpers
                     .composeExceptionally(future, err -> {
                         throw new RuntimeException("!!! " + err.getMessage());
@@ -191,7 +191,7 @@ class AsyncHelpersTest {
         @Test
         @DisplayName("composeExceptionally with a null mapper")
         void composeExceptionallyWithNullMapper() {
-            CompletionStage<Object> future = AsyncHelpers.failedFuture(new IOException("boom"));
+            CompletionStage<Object> future = CompletableFuture.failedFuture(new IOException("boom"));
             assertThrows(NullPointerException.class, () -> AsyncHelpers.composeExceptionally(future, null));
         }
     }
