@@ -69,7 +69,6 @@ Introducing new helpers will always be done carefully by observing real world im
 
 The `AsyncHelpers` class offers a few helpers to simplify developing against the `CompletionStage`, especially before Java 11.
 
-* `failedFuture` creates a `CompletionStage` that has already failed.
 * `applyExceptionally` applies a function to map a failure `Throwable` to another `Throwable`.
 * `composeExceptionally` applies a function to compose a failure `Throwable` to another `CompletionStage`.
 
@@ -77,5 +76,4 @@ The `AsyncHelpers` class offers a few helpers to simplify developing against the
 
 More often than not we need a little help when dealing with a `Publisher`.
 
-* `collectToList` assembles all items from a `Publisher` to a `CompletionStage<List>`.
-* `map` returns a `Publisher` that applies a function to all items from the original `Publisher`. 
+* `collectToList` assembles all items from a `Publisher` to a `CompletionStage<List>`. 

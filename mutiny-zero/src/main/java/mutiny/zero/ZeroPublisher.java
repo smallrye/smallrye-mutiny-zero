@@ -44,8 +44,8 @@ public interface ZeroPublisher {
      * Create a {@link Publisher} from an iterable object.
      * <p>
      * Note that this assumes an in-memory, non-blocking {@link java.util.Iterator}.
-     * Do not try to force an iterator as a way to bridge an API with {@link Publisher} if it is
-     * does not behave like an in-memory data structure.
+     * Do not try to force an iterator as a way to bridge an API with {@link Publisher} as it does not behave like an
+     * in-memory data structure.
      *
      * @param iterable the iterable object, cannot be {@code null}
      * @param <T> the items type

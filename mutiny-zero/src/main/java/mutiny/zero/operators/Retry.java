@@ -9,7 +9,7 @@ import java.util.function.Predicate;
  * A {@link Flow.Publisher} that retries on failure by re-subscribing to its upstream.
  * A {@link Predicate} controls when to retry, and when to stop retrying.
  * <p>
- *
+ * <p>
  * Note: this retry operator does not perform advanced time-based re-subscriptions (e.g., exponential back-off).
  *
  * @param <T> the elements type

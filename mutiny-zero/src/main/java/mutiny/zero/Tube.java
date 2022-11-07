@@ -21,7 +21,7 @@ public interface Tube<T> {
 
     /**
      * Send an item.
-     * 
+     *
      * @param item the item
      * @return this {@link Tube} instance
      */
@@ -29,7 +29,7 @@ public interface Tube<T> {
 
     /**
      * Terminally signal an error.
-     * 
+     *
      * @param err the error
      */
     void fail(Throwable err);
@@ -41,21 +41,21 @@ public interface Tube<T> {
 
     /**
      * Check if the subscription has been cancelled.
-     * 
+     *
      * @return {@code true} if the subscriber has cancelled its subscription, {@code false} otherwise
      */
     boolean cancelled();
 
     /**
      * Check the number of outstanding requests.
-     * 
+     *
      * @return the number of outstanding requests.
      */
     long outstandingRequests();
 
     /**
      * Define an action when the subscription is cancelled.
-     * 
+     *
      * @param action the action
      * @return this {@link Tube}
      */
@@ -63,7 +63,7 @@ public interface Tube<T> {
 
     /**
      * Define an action on termination (completion, error or cancellation), typically for cleanup purposes.
-     * 
+     *
      * @param action the action
      * @return this {@link Tube}
      */
@@ -71,7 +71,7 @@ public interface Tube<T> {
 
     /**
      * Define an action when items are being requested.
-     * 
+     *
      * @param consumer the action, consuming the number of items for this request
      * @return this {@link Tube}
      */
