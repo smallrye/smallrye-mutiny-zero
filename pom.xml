@@ -11,7 +11,7 @@
     <groupId>io.smallrye.reactive</groupId>
     <artifactId>mutiny-zero-parent</artifactId>
     <name>SmallRye Mutiny Zero Parent</name>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <description>Mutiny Zero Parent Module</description>
 
     <packaging>pom</packaging>
@@ -55,7 +55,7 @@
         <connection>scm:git:git@github.com:smallrye/smallrye-mutiny-zero.git</connection>
         <developerConnection>scm:git:git@github.com:smallrye/smallrye-mutiny-zero.git</developerConnection>
         <url>https://github.com/smallrye/smallrye-mutiny-zero</url>
-        <tag>HEAD</tag>
+        <tag>1.0.0</tag>
     </scm>
 
     <properties>
