@@ -61,7 +61,7 @@
     <properties>
         <reactive-streams.version>1.0.4</reactive-streams.version>
 
-        <mutiny.version>2.5.3</mutiny.version>
+        <mutiny.version>2.5.4</mutiny.version>
         <vertx.version>4.5.1</vertx.version>
 
         <awaitility.version>4.2.0</awaitility.version>
