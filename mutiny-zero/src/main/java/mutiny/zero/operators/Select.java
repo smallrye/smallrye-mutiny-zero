@@ -42,6 +42,8 @@ public class Select<T> implements Flow.Publisher<T> {
                 try {
                     if (predicate.test(item)) {
                         downstream().onNext(item);
+                    } else {
+                        upstreamSubscription().request(1L);
                     }
                 } catch (Throwable failure) {
                     cancel();

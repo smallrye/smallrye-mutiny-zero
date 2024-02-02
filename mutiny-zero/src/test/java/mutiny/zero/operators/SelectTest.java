@@ -26,6 +26,18 @@ class SelectTest {
     }
 
     @Test
+    @DisplayName("Filter elements")
+    void maintainDemand() {
+        Flow.Publisher<Integer> source = ZeroPublisher.fromItems(1, 2, 3, 4);
+        Select<Integer> operator = new Select<>(source, n -> n % 2 == 0);
+
+        AssertSubscriber<Object> sub = AssertSubscriber.create(3L);
+        operator.subscribe(sub);
+
+        sub.assertCompleted().assertItems(2, 4);
+    }
+
+    @Test
     @DisplayName("Reject a null source")
     void rejectNullSource() {
         assertThatThrownBy(() -> new Select<>(null, o -> true))

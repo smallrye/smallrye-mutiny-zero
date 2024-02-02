@@ -14,6 +14,10 @@ abstract class ProcessorBase<I, O> implements Flow.Processor<I, O>, Flow.Subscri
         return cancelled.get();
     }
 
+    protected Flow.Subscription upstreamSubscription() {
+        return upstreamSubscription;
+    }
+
     protected Flow.Subscriber<? super O> downstream() {
         return downstream;
     }
