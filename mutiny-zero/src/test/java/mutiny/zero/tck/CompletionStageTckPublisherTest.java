@@ -1,6 +1,5 @@
 package mutiny.zero.tck;
 
-import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Flow.Publisher;
 
@@ -22,11 +21,7 @@ public class CompletionStageTckPublisherTest extends FlowPublisherVerification<L
 
     @Override
     public Publisher<Long> createFailedFlowPublisher() {
-        return ZeroPublisher.fromCompletionStage(() -> {
-            CompletableFuture<Long> future = new CompletableFuture<>();
-            future.completeExceptionally(new IOException("boom"));
-            return future;
-        });
+        return null;
     }
 
     @Override

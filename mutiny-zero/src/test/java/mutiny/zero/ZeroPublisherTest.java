@@ -190,6 +190,38 @@ class ZeroPublisherTest {
         }
 
         @Test
+        @DisplayName("Null CompletionStage")
+        void nullCompletionStage() {
+            AssertSubscriber<Object> sub = AssertSubscriber.create(10);
+            ZeroPublisher.fromCompletionStage(() -> null).subscribe(sub);
+
+            sub.awaitFailure(Duration.ofSeconds(5));
+            sub.assertFailedWith(NullPointerException.class, "The completion stage is null");
+        }
+
+        @Test
+        @DisplayName("Upfront CompletionStage cancellation")
+        void upfrontCancellation() {
+            AssertSubscriber<Object> sub = AssertSubscriber.create();
+            ZeroPublisher.fromCompletionStage(() -> CompletableFuture.completedFuture(58)).subscribe(sub);
+
+            sub.assertHasNotReceivedAnyItem().assertNotTerminated();
+            sub.cancel();
+            sub.request(10L);
+            sub.assertHasNotReceivedAnyItem().assertNotTerminated();
+        }
+
+        @Test
+        @DisplayName("Reject negative requests")
+        void rejectNegativeRequest() {
+            AssertSubscriber<Object> sub = AssertSubscriber.create();
+            ZeroPublisher.fromCompletionStage(() -> CompletableFuture.completedFuture(58)).subscribe(sub);
+
+            sub.request(0L);
+            sub.assertFailedWith(IllegalArgumentException.class, "(non-positive subscription request)");
+        }
+
+        @Test
         @DisplayName("Publisher to CompletionStage (value)")
         void publisherToCompletionStageOk() {
             AtomicInteger counter = new AtomicInteger();
