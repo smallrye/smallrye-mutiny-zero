@@ -86,9 +86,8 @@ public class CompletionStagePublisher<T> implements Publisher<T> {
 
         @Override
         public void cancel() {
-            if (cancelled.compareAndSet(false, true)) {
-                completableFuture.toCompletableFuture().cancel(false);
-            }
+            completableFuture.cancel(false);
+            cancelled.set(true);
         }
     }
 }
