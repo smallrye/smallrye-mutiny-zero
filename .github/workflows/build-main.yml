@@ -42,12 +42,18 @@ jobs:
           distribution: temurin
           java-version: 11
           cache: maven
+          server-id: 'oss.sonatype'
+          server-username: 'MAVEN_DEPLOY_USERNAME'
+          server-password: 'MAVEN_DEPLOY_TOKEN'
+          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+          gpg-passphrase: 'MAVEN_GPG_PASSPHRASE'
       - name: Deploy
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SECRET_PASSPHRASE: ${{ secrets.SECRET_PASSPHRASE }}
+          MAVEN_DEPLOY_USERNAME: ${{ secrets.MAVEN_DEPLOY_USERNAME }}
+          MAVEN_DEPLOY_TOKEN: ${{ secrets.MAVEN_DEPLOY_TOKEN }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
         run: |
-          .github/scripts/decrypt-secrets.sh
           .github/scripts/deploy.sh
 
   compatibility:
