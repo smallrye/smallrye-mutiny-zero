@@ -65,7 +65,7 @@
         <vertx.version>4.5.11</vertx.version>
 
         <awaitility.version>4.2.2</awaitility.version>
-        <assertj-core.version>3.26.3</assertj-core.version>
+        <assertj-core.version>3.27.0</assertj-core.version>
 
         <junit-jupiter.version>5.11.3</junit-jupiter.version>
         <testng.version>7.10.2</testng.version>
