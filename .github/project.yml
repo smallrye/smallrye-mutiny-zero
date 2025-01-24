@@ -1,4 +1,4 @@
 name: SmallRye Mutiny Zero
 release:
-  current-version: 1.1.1-RC2
-  next-version: 1.1.1-SNAPSHOT
+  current-version: 1.1.1
+  next-version: 1.1.2-SNAPSHOT
