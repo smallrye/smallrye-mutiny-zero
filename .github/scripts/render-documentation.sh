@@ -2,7 +2,7 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-./mvnw package javadoc:aggregate -DskipTests
+./mvnw -s .github/maven-ci-settings.xml -B package javadoc:aggregate -DskipTests
 cp -R target/reports/apidocs docs/
 
 PROJECT_VERSION=$(cat .github/project.yml | yq eval '.release.current-version' -)
