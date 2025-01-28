@@ -25,27 +25,14 @@ public class TubePublisher<T> implements Publisher<T> {
     @Override
     public void subscribe(Flow.Subscriber<? super T> subscriber) {
         requireNonNull(subscriber, "The subscriber cannot be null");
-        TubeBase<T> tube = null;
-        switch (backpressureStrategy) {
-            case BUFFER:
-                tube = new BufferingTube<>(subscriber, bufferSize);
-                break;
-            case UNBOUNDED_BUFFER:
-                tube = new UnbounbedBufferingTube<>(subscriber);
-                break;
-            case DROP:
-                tube = new DroppingTube<>(subscriber);
-                break;
-            case ERROR:
-                tube = new ErroringTube<>(subscriber);
-                break;
-            case IGNORE:
-                tube = new IgnoringTube<>(subscriber);
-                break;
-            case LATEST:
-                tube = new LatestTube<>(subscriber, bufferSize);
-                break;
-        }
+        TubeBase<T> tube = switch (backpressureStrategy) {
+            case BUFFER -> new BufferingTube<>(subscriber, bufferSize);
+            case UNBOUNDED_BUFFER -> new UnbounbedBufferingTube<>(subscriber);
+            case DROP -> new DroppingTube<>(subscriber);
+            case ERROR -> new ErroringTube<>(subscriber);
+            case IGNORE -> new IgnoringTube<>(subscriber);
+            case LATEST -> new LatestTube<>(subscriber, bufferSize);
+        };
         subscriber.onSubscribe(tube);
         tubeConsumer.accept(tube);
     }
