@@ -77,7 +77,7 @@
         <revapi-reporter-json.version>0.5.0</revapi-reporter-json.version>
         <revapi-reporter-text.version>0.15.0</revapi-reporter-text.version>
 
-        <maven.compiler.release>11</maven.compiler.release>
+        <maven.compiler.release>17</maven.compiler.release>
     </properties>
 
     <dependencyManagement>
