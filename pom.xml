@@ -70,7 +70,7 @@
         <junit-jupiter.version>6.0.1</junit-jupiter.version>
         <testng.version>7.11.0</testng.version>
         <testng-junit5-engine.version>1.1.0</testng-junit5-engine.version>
-        <logback-classic.version>1.5.21</logback-classic.version>
+        <logback-classic.version>1.5.22</logback-classic.version>
 
         <revapi-maven-plugin.version>0.15.1</revapi-maven-plugin.version>
         <revapi-java.version>0.28.4</revapi-java.version>
