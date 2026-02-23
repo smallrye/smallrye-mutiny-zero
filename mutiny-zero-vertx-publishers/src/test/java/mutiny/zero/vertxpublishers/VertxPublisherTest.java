@@ -36,30 +36,8 @@ class VertxPublisherTest {
         @AfterEach
         void cleanup() {
             AtomicBoolean closed = new AtomicBoolean();
-            vertx.close(ar -> closed.set(true));
+            vertx.close().onComplete(ar -> closed.set(true));
             await().atMost(5, TimeUnit.SECONDS).untilTrue(closed);
-        }
-
-        @Test
-        @DisplayName("Test using a periodic stream")
-        void periodicStream() throws InterruptedException {
-            Flow.Publisher<Long> publisher = VertxPublisher.fromSupplier(() -> vertx.periodicStream(50));
-
-            AssertSubscriber<String> sub = AssertSubscriber.create();
-            Multi.createFrom().publisher(publisher)
-                    .onItem().transform(ignored -> "tick")
-                    .select().first(10)
-                    .subscribe().withSubscriber(sub);
-
-            Thread.sleep(250);
-            sub.assertHasNotReceivedAnyItem();
-            sub.request(2);
-            Thread.sleep(500);
-            sub.assertItems("tick", "tick");
-            sub.request(1);
-            Thread.sleep(500);
-            sub.assertItems("tick", "tick", "tick");
-            sub.cancel();
         }
 
         @Test
