@@ -10,6 +10,8 @@ import java.util.concurrent.Flow.Subscriber;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
+import org.jspecify.annotations.Nullable;
+
 public class CompletionStagePublisher<T> implements Publisher<T> {
 
     private final Supplier<CompletionStage<T>> completionStageSupplier;
@@ -29,7 +31,7 @@ public class CompletionStagePublisher<T> implements Publisher<T> {
         private final Supplier<CompletionStage<T>> completionStageSupplier;
         private final Subscriber<? super T> subscriber;
         private final AtomicReference<State> state = new AtomicReference<>(State.INIT);
-        private CompletableFuture<T> completableFuture;
+        private @Nullable CompletableFuture<T> completableFuture;
 
         enum State {
             INIT,

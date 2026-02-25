@@ -5,6 +5,8 @@ import static java.util.Objects.requireNonNull;
 import java.util.concurrent.Flow;
 import java.util.function.Function;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * A {@link java.util.concurrent.Flow.Publisher} that recovers from failure using a {@link Function}.
  * <p>
@@ -22,15 +24,15 @@ import java.util.function.Function;
 public class Recover<T> implements Flow.Publisher<T> {
 
     private final Flow.Publisher<T> upstream;
-    private final Function<Throwable, T> function;
+    private final Function<Throwable, @Nullable T> function;
 
     /**
      * Build a new recovery publisher.
      *
      * @param upstream the upstream publisher
-     * @param function the recovery function, must not return {@code null} values
+     * @param function the recovery function where returning {@code null} implies completion
      */
-    public Recover(Flow.Publisher<T> upstream, Function<Throwable, T> function) {
+    public Recover(Flow.Publisher<T> upstream, Function<Throwable, @Nullable T> function) {
         this.upstream = requireNonNull(upstream, "The upstream cannot be null");
         this.function = requireNonNull(function, "The function cannot be null");
     }

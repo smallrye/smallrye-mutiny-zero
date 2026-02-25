@@ -3,10 +3,12 @@ package mutiny.zero.operators;
 import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.jspecify.annotations.Nullable;
+
 abstract class ProcessorBase<I, O> implements Flow.Processor<I, O>, Flow.Subscription {
 
-    private Flow.Subscriber<? super O> downstream;
-    private Flow.Subscription upstreamSubscription;
+    private Flow.@Nullable Subscriber<? super O> downstream;
+    private Flow.@Nullable Subscription upstreamSubscription;
 
     private final AtomicBoolean cancelled = new AtomicBoolean();
 
@@ -15,10 +17,12 @@ abstract class ProcessorBase<I, O> implements Flow.Processor<I, O>, Flow.Subscri
     }
 
     protected Flow.Subscription upstreamSubscription() {
+        assert upstreamSubscription != null;
         return upstreamSubscription;
     }
 
     protected Flow.Subscriber<? super O> downstream() {
+        assert downstream != null;
         return downstream;
     }
 
@@ -34,6 +38,7 @@ abstract class ProcessorBase<I, O> implements Flow.Processor<I, O>, Flow.Subscri
     @Override
     public void onSubscribe(Flow.Subscription subscription) {
         this.upstreamSubscription = subscription;
+        assert downstream != null;
         downstream.onSubscribe(this);
     }
 
@@ -41,6 +46,7 @@ abstract class ProcessorBase<I, O> implements Flow.Processor<I, O>, Flow.Subscri
     public void onError(Throwable throwable) {
         if (!cancelled()) {
             cancel();
+            assert downstream != null;
             downstream.onError(throwable);
         }
     }
@@ -48,6 +54,7 @@ abstract class ProcessorBase<I, O> implements Flow.Processor<I, O>, Flow.Subscri
     @Override
     public void onComplete() {
         if (!cancelled()) {
+            assert downstream != null;
             downstream.onComplete();
         }
     }
@@ -57,6 +64,7 @@ abstract class ProcessorBase<I, O> implements Flow.Processor<I, O>, Flow.Subscri
     @Override
     public void request(long n) {
         if (!cancelled()) {
+            assert upstreamSubscription != null;
             upstreamSubscription.request(n);
         }
     }
@@ -64,6 +72,7 @@ abstract class ProcessorBase<I, O> implements Flow.Processor<I, O>, Flow.Subscri
     @Override
     public void cancel() {
         if (cancelled.compareAndSet(false, true)) {
+            assert upstreamSubscription != null;
             upstreamSubscription.cancel();
             upstreamSubscription = null;
         }
