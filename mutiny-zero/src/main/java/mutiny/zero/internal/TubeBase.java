@@ -10,6 +10,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.LongConsumer;
 
+import org.jspecify.annotations.Nullable;
+
 import mutiny.zero.Tube;
 
 public abstract class TubeBase<T> implements Tube<T>, Subscription {
@@ -21,7 +23,7 @@ public abstract class TubeBase<T> implements Tube<T>, Subscription {
     protected final AtomicLong requested = new AtomicLong();
     protected final ConcurrentLinkedQueue<T> dispatchQueue = new ConcurrentLinkedQueue<>();
 
-    protected volatile Throwable failure;
+    protected volatile @Nullable Throwable failure;
     protected volatile boolean completed = false;
 
     protected Runnable terminationAction = () -> {

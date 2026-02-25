@@ -1,5 +1,7 @@
+@org.jspecify.annotations.NullMarked
 module io.smallrye.mutiny.zero.vertxpublishers {
     exports mutiny.zero.vertxpublishers;
-    requires io.smallrye.mutiny.zero;
-    requires io.vertx.core;
+    requires transitive io.smallrye.mutiny.zero;
+    requires transitive org.jspecify;
+    requires transitive io.vertx.core;
 }
