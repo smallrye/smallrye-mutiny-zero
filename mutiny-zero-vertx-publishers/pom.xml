@@ -24,6 +24,10 @@
             <artifactId>vertx-core</artifactId>
             <version>${vertx.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.jspecify</groupId>
+            <artifactId>jspecify</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>io.smallrye.reactive</groupId>

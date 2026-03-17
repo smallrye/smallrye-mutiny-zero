@@ -6,11 +6,13 @@ import java.util.concurrent.Flow;
 import java.util.concurrent.Flow.Subscriber;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.jspecify.annotations.Nullable;
+
 public class PublisherToCompletionStageSubscriber<T> implements Subscriber<T> {
 
     private final CompletableFuture<Optional<T>> future;
     private final AtomicBoolean completed = new AtomicBoolean();
-    private Flow.Subscription subscription;
+    private Flow.@Nullable Subscription subscription;
 
     public PublisherToCompletionStageSubscriber(CompletableFuture<Optional<T>> future) {
         this.future = future;
@@ -25,6 +27,7 @@ public class PublisherToCompletionStageSubscriber<T> implements Subscriber<T> {
     @Override
     public void onNext(T value) {
         if (completed.compareAndSet(false, true)) {
+            assert subscription != null;
             subscription.cancel();
             future.complete(Optional.of(value));
         }
@@ -33,6 +36,7 @@ public class PublisherToCompletionStageSubscriber<T> implements Subscriber<T> {
     @Override
     public void onError(Throwable throwable) {
         if (completed.compareAndSet(false, true)) {
+            assert subscription != null;
             subscription.cancel();
             future.completeExceptionally(throwable);
         }
