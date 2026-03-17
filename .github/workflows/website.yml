@@ -15,7 +15,7 @@ jobs:
         with:
           fetch-depth: 0 # fetch all commits and branches for mike to work properly
       - uses: actions/setup-java@v5
-        name: Set up Java 17
+        name: Set up Java
         with:
           java-version: 17
           distribution: temurin
