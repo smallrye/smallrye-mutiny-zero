@@ -79,6 +79,7 @@
         <revapi-reporter-text.version>0.15.1</revapi-reporter-text.version>
 
         <maven.compiler.release>17</maven.compiler.release>
+		<bnd-maven-plugin.version>7.2.1</bnd-maven-plugin.version>
     </properties>
 
     <dependencyManagement>
