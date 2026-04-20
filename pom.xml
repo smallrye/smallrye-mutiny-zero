@@ -63,7 +63,7 @@
         <jspecify.version>1.0.0</jspecify.version>
 
         <mutiny.version>3.1.1</mutiny.version>
-        <vertx.version>5.0.10</vertx.version>
+        <vertx.version>5.0.11</vertx.version>
 
         <awaitility.version>4.3.0</awaitility.version>
         <assertj-core.version>3.27.7</assertj-core.version>
