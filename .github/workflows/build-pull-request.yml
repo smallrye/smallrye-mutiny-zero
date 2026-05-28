@@ -9,7 +9,7 @@ jobs:
       matrix:
         java: [
           { 'version': '17', 'opts': '' },
-          { 'version': '23', 'opts': '' }
+          { 'version': '25', 'opts': '' }
         ]
     name: Build with Java ${{ matrix.java.version }} (OpenJDK)
     steps:
