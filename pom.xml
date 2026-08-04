@@ -60,7 +60,7 @@
 
     <properties>
         <reactive-streams.version>1.0.4</reactive-streams.version>
-        <jspecify.version>1.0.0</jspecify.version>
+        <jspecify.version>1.0.1</jspecify.version>
 
         <mutiny.version>3.3.0</mutiny.version>
         <vertx.version>5.1.5</vertx.version>
