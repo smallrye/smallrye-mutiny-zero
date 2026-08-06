@@ -3,9 +3,13 @@ package mutiny.zero.operators;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Flow;
+import java.util.concurrent.SubmissionPublisher;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -485,5 +489,91 @@ class SpreadTest {
         assertEquals(1000, sub.getItems().get(1));
         assertEquals(1, sub.getItems().get(2));
         assertEquals(1001, sub.getItems().get(3));
+    }
+
+    // ---- Async inner publishers ---- //
+
+    @RepeatedTest(100)
+    @DisplayName("Async inner publishers with concurrency=1 deliver all items in order")
+    void asyncInnersConcatMap() {
+        ExecutorService executor = Executors.newFixedThreadPool(4);
+        try {
+            Flow.Publisher<Integer> upstream = ZeroPublisher.fromItems(1, 2, 3);
+            Spread<Integer, String> spread = new Spread<>(upstream,
+                    i -> asyncPublisher(executor, i + "a", i + "b"), 1, 8);
+
+            AssertSubscriber<String> sub = AssertSubscriber.create(Long.MAX_VALUE);
+            spread.subscribe(sub);
+
+            sub.awaitCompletion(Duration.ofSeconds(5));
+            sub.assertCompleted().assertItems("1a", "1b", "2a", "2b", "3a", "3b");
+        } finally {
+            executor.shutdownNow();
+        }
+    }
+
+    @RepeatedTest(100)
+    @DisplayName("Async inner publishers with concurrency > 1 deliver all items")
+    void asyncInnersConcurrent() {
+        ExecutorService executor = Executors.newFixedThreadPool(4);
+        try {
+            Flow.Publisher<Integer> upstream = ZeroPublisher.fromItems(1, 2, 3, 4, 5);
+            Spread<Integer, String> spread = new Spread<>(upstream,
+                    i -> asyncPublisher(executor, i + "a", i + "b"), 3, 8);
+
+            AssertSubscriber<String> sub = AssertSubscriber.create(Long.MAX_VALUE);
+            spread.subscribe(sub);
+
+            sub.awaitCompletion(Duration.ofSeconds(5));
+            sub.assertCompleted();
+            List<String> items = sub.getItems();
+            assertEquals(10, items.size());
+            assertTrue(items.containsAll(
+                    List.of("1a", "1b", "2a", "2b", "3a", "3b", "4a", "4b", "5a", "5b")));
+        } finally {
+            executor.shutdownNow();
+        }
+    }
+
+    @RepeatedTest(100)
+    @DisplayName("Async inner publishers with paced demand")
+    void asyncInnersWithBackpressure() {
+        ExecutorService executor = Executors.newFixedThreadPool(4);
+        try {
+            Flow.Publisher<Integer> upstream = ZeroPublisher.fromItems(1, 2);
+            Spread<Integer, String> spread = new Spread<>(upstream,
+                    i -> asyncPublisher(executor, i + "a", i + "b"), 1, 8);
+
+            AssertSubscriber<String> sub = AssertSubscriber.create();
+            spread.subscribe(sub);
+
+            sub.request(2);
+            sub.awaitItems(2, Duration.ofSeconds(5));
+            assertEquals(2, sub.getItems().size());
+
+            sub.request(Long.MAX_VALUE);
+            sub.awaitCompletion(Duration.ofSeconds(5));
+            sub.assertCompleted();
+            assertEquals(4, sub.getItems().size());
+        } finally {
+            executor.shutdownNow();
+        }
+    }
+
+    @SafeVarargs
+    private static <T> Flow.Publisher<T> asyncPublisher(ExecutorService executor, T... items) {
+        return new Flow.Publisher<>() {
+            @Override
+            public void subscribe(Flow.Subscriber<? super T> subscriber) {
+                SubmissionPublisher<T> pub = new SubmissionPublisher<>(executor, Flow.defaultBufferSize());
+                pub.subscribe(subscriber);
+                executor.execute(() -> {
+                    for (T item : items) {
+                        pub.submit(item);
+                    }
+                    pub.close();
+                });
+            }
+        };
     }
 }
