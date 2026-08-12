@@ -138,7 +138,6 @@ public class Concatenate<T> implements Flow.Publisher<T> {
             if (cancelled.compareAndSet(false, true)) {
                 assert upstreamSubscription != null;
                 upstreamSubscription.cancel();
-                upstreamSubscription = null;
             }
         }
     }
