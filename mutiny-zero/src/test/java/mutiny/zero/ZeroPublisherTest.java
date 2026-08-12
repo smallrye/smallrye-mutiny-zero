@@ -128,6 +128,24 @@ class ZeroPublisherTest {
 
             sub.assertFailedWith(NullPointerException.class, "null value");
         }
+
+        @Test
+        @DisplayName("iterator() must be called exactly once per subscribe")
+        void iteratorCalledOnce() {
+            AtomicInteger iteratorCallCount = new AtomicInteger();
+            List<String> data = List.of("a", "b", "c");
+
+            Iterable<String> trackingIterable = () -> {
+                iteratorCallCount.incrementAndGet();
+                return data.iterator();
+            };
+
+            AssertSubscriber<Object> sub = AssertSubscriber.create(Long.MAX_VALUE);
+            ZeroPublisher.fromIterable(trackingIterable).subscribe(sub);
+
+            sub.assertCompleted().assertItems("a", "b", "c");
+            assertThat(iteratorCallCount).hasValue(1);
+        }
     }
 
     @Nested
