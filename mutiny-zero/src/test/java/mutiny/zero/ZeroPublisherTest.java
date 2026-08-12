@@ -908,6 +908,38 @@ class ZeroPublisherTest {
             sub.assertCompleted();
             assertThat(sub.getItems()).hasSize(100).endsWith(98, 99, 100);
         }
+
+        @RepeatedTest(50)
+        @DisplayName("No item starvation when request(1) races with send()")
+        void noItemStarvationOnRequestVsSend() throws Exception {
+            CyclicBarrier barrier = new CyclicBarrier(2);
+            CountDownLatch sendDone = new CountDownLatch(1);
+
+            AssertSubscriber<Integer> sub = AssertSubscriber.create();
+            TubeConfiguration configuration = new TubeConfiguration()
+                    .withBackpressureStrategy(BackpressureStrategy.BUFFER)
+                    .withBufferSize(256);
+            ZeroPublisher.<Integer> create(configuration, tube -> {
+                new Thread(() -> {
+                    try {
+                        barrier.await(5, TimeUnit.SECONDS);
+                    } catch (Exception e) {
+                        Thread.currentThread().interrupt();
+                    }
+                    tube.send(1);
+                    tube.complete();
+                    sendDone.countDown();
+                }).start();
+            }).subscribe(sub);
+
+            barrier.await(5, TimeUnit.SECONDS);
+            sub.request(1);
+            assertTrue(sendDone.await(5, TimeUnit.SECONDS));
+
+            sub.request(1);
+            sub.awaitCompletion(Duration.ofSeconds(5));
+            sub.assertCompleted().assertItems(1);
+        }
     }
 
     @Nested
