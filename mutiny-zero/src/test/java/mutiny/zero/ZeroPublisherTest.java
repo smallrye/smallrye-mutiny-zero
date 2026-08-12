@@ -1026,5 +1026,40 @@ class ZeroPublisherTest {
 
             assertThat(terminationCount).hasValue(1);
         }
+
+        @RepeatedTest(100)
+        @DisplayName("cancellationAction must be called at most once when send() races with cancel()")
+        void cancellationActionCalledAtMostOnceOnSendVsCancel() throws Exception {
+            AtomicInteger cancellationCount = new AtomicInteger();
+            CountDownLatch tubeReady = new CountDownLatch(1);
+            CyclicBarrier barrier = new CyclicBarrier(2);
+            CountDownLatch threadDone = new CountDownLatch(1);
+
+            AssertSubscriber<Integer> sub = AssertSubscriber.create(Long.MAX_VALUE);
+            TubeConfiguration configuration = new TubeConfiguration().withBackpressureStrategy(BackpressureStrategy.DROP);
+            ZeroPublisher.<Integer> create(configuration, tube -> {
+                new Thread(() -> {
+                    tube.whenCancelled(cancellationCount::incrementAndGet);
+                    tube.send(1);
+                    tubeReady.countDown();
+                    try {
+                        barrier.await(5, TimeUnit.SECONDS);
+                    } catch (Exception e) {
+                        Thread.currentThread().interrupt();
+                    }
+                    for (int i = 0; i < 100; i++) {
+                        tube.send(i);
+                    }
+                    threadDone.countDown();
+                }).start();
+            }).subscribe(sub);
+
+            assertTrue(tubeReady.await(5, TimeUnit.SECONDS));
+            barrier.await(5, TimeUnit.SECONDS);
+            sub.cancel();
+            assertTrue(threadDone.await(5, TimeUnit.SECONDS));
+
+            assertThat(cancellationCount).hasValueLessThanOrEqualTo(1);
+        }
     }
 }

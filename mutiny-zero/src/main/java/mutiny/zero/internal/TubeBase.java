@@ -165,14 +165,12 @@ public abstract class TubeBase<T> implements Tube<T>, Subscription {
 
             if (cancelled) {
                 queue.clear();
-                cancellationAction.run();
                 return;
             }
 
             do {
                 if (cancelled) {
                     queue.clear();
-                    cancellationAction.run();
                     return;
                 }
 
