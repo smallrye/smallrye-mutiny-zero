@@ -74,7 +74,6 @@ abstract class ProcessorBase<I, O> implements Flow.Processor<I, O>, Flow.Subscri
         if (cancelled.compareAndSet(false, true)) {
             assert upstreamSubscription != null;
             upstreamSubscription.cancel();
-            upstreamSubscription = null;
         }
     }
 }
