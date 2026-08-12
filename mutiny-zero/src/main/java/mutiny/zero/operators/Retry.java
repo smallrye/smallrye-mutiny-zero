@@ -3,7 +3,10 @@ package mutiny.zero.operators;
 import static java.util.Objects.requireNonNull;
 
 import java.util.concurrent.Flow;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Predicate;
+
+import mutiny.zero.internal.Helper;
 
 /**
  * A {@link Flow.Publisher} that retries on failure by re-subscribing to its upstream.
@@ -63,9 +66,34 @@ public class Retry<T> implements Flow.Publisher<T> {
 
     private class Processor extends ProcessorBase<T, T> {
 
+        private boolean subscribedDownstream;
+        private final AtomicLong pendingDemand = new AtomicLong();
+
+        @Override
+        public void onSubscribe(Flow.Subscription subscription) {
+            if (!subscribedDownstream) {
+                subscribedDownstream = true;
+                super.onSubscribe(subscription);
+            } else {
+                // Retry: update upstream subscription without re-signaling downstream
+                setUpstreamSubscription(subscription);
+                long demand = pendingDemand.get();
+                if (demand > 0L) {
+                    subscription.request(demand);
+                }
+            }
+        }
+
+        @Override
+        public void request(long n) {
+            Helper.add(pendingDemand, n);
+            super.request(n);
+        }
+
         @Override
         public void onNext(T item) {
             if (!cancelled()) {
+                pendingDemand.decrementAndGet();
                 downstream().onNext(item);
             }
         }

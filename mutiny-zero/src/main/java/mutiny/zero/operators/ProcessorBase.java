@@ -21,6 +21,10 @@ abstract class ProcessorBase<I, O> implements Flow.Processor<I, O>, Flow.Subscri
         return upstreamSubscription;
     }
 
+    protected void setUpstreamSubscription(Flow.Subscription subscription) {
+        this.upstreamSubscription = subscription;
+    }
+
     protected Flow.Subscriber<? super O> downstream() {
         assert downstream != null;
         return downstream;
