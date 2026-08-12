@@ -6,6 +6,7 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Flow;
 import java.util.concurrent.Flow.Subscription;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.LongConsumer;
@@ -25,6 +26,7 @@ public abstract class TubeBase<T> implements Tube<T>, Subscription {
 
     protected volatile @Nullable Throwable failure;
     protected volatile boolean completed = false;
+    private final AtomicBoolean terminated = new AtomicBoolean();
 
     protected Runnable terminationAction = () -> {
         // Do nothing
@@ -66,7 +68,9 @@ public abstract class TubeBase<T> implements Tube<T>, Subscription {
         cancelled = true;
         dispatchQueue.clear();
         cancellationAction.run();
-        terminationAction.run();
+        if (terminated.compareAndSet(false, true)) {
+            terminationAction.run();
+        }
     }
 
     // ---- Tube API ---- //
@@ -180,7 +184,9 @@ public abstract class TubeBase<T> implements Tube<T>, Subscription {
                     } else {
                         subscriber.onComplete();
                     }
-                    terminationAction.run();
+                    if (terminated.compareAndSet(false, true)) {
+                        terminationAction.run();
+                    }
                     return;
                 }
                 if (item == null) {
@@ -202,12 +208,16 @@ public abstract class TubeBase<T> implements Tube<T>, Subscription {
             if (failure != null) {
                 cancelled = true;
                 subscriber.onError(failure);
-                terminationAction.run();
+                if (terminated.compareAndSet(false, true)) {
+                    terminationAction.run();
+                }
                 return;
             } else if (queue.isEmpty() && completed) {
                 cancelled = true;
                 subscriber.onComplete();
-                terminationAction.run();
+                if (terminated.compareAndSet(false, true)) {
+                    terminationAction.run();
+                }
                 return;
             }
 
