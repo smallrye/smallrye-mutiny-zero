@@ -2,6 +2,7 @@ package mutiny.zero;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.time.Duration;
@@ -9,7 +10,10 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.Flow;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
@@ -20,6 +24,7 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
 import io.smallrye.mutiny.Multi;
@@ -122,6 +127,24 @@ class ZeroPublisherTest {
             ZeroPublisher.fromItems(1, null, 3).subscribe(sub);
 
             sub.assertFailedWith(NullPointerException.class, "null value");
+        }
+
+        @Test
+        @DisplayName("iterator() must be called exactly once per subscribe")
+        void iteratorCalledOnce() {
+            AtomicInteger iteratorCallCount = new AtomicInteger();
+            List<String> data = List.of("a", "b", "c");
+
+            Iterable<String> trackingIterable = () -> {
+                iteratorCallCount.incrementAndGet();
+                return data.iterator();
+            };
+
+            AssertSubscriber<Object> sub = AssertSubscriber.create(Long.MAX_VALUE);
+            ZeroPublisher.fromIterable(trackingIterable).subscribe(sub);
+
+            sub.assertCompleted().assertItems("a", "b", "c");
+            assertThat(iteratorCallCount).hasValue(1);
         }
     }
 
@@ -885,6 +908,38 @@ class ZeroPublisherTest {
             sub.assertCompleted();
             assertThat(sub.getItems()).hasSize(100).endsWith(98, 99, 100);
         }
+
+        @RepeatedTest(50)
+        @DisplayName("No item starvation when request(1) races with send()")
+        void noItemStarvationOnRequestVsSend() throws Exception {
+            CyclicBarrier barrier = new CyclicBarrier(2);
+            CountDownLatch sendDone = new CountDownLatch(1);
+
+            AssertSubscriber<Integer> sub = AssertSubscriber.create();
+            TubeConfiguration configuration = new TubeConfiguration()
+                    .withBackpressureStrategy(BackpressureStrategy.BUFFER)
+                    .withBufferSize(256);
+            ZeroPublisher.<Integer> create(configuration, tube -> {
+                new Thread(() -> {
+                    try {
+                        barrier.await(5, TimeUnit.SECONDS);
+                    } catch (Exception e) {
+                        Thread.currentThread().interrupt();
+                    }
+                    tube.send(1);
+                    tube.complete();
+                    sendDone.countDown();
+                }).start();
+            }).subscribe(sub);
+
+            barrier.await(5, TimeUnit.SECONDS);
+            sub.request(1);
+            assertTrue(sendDone.await(5, TimeUnit.SECONDS));
+
+            sub.request(1);
+            sub.awaitCompletion(Duration.ofSeconds(5));
+            sub.assertCompleted().assertItems(1);
+        }
     }
 
     @Nested
@@ -982,6 +1037,79 @@ class ZeroPublisherTest {
             sub.request(Long.MAX_VALUE);
             sub.assertItems(495, 496, 497, 498, 499);
             sub.assertCompleted();
+        }
+    }
+
+    @Nested
+    @DisplayName("Termination action race tests")
+    class TerminationRaces {
+
+        @RepeatedTest(100)
+        @DisplayName("terminationAction must be called exactly once when complete() races with cancel()")
+        void terminationActionCalledOnceOnCompleteVsCancel() throws Exception {
+            AtomicInteger terminationCount = new AtomicInteger();
+            CountDownLatch tubeReady = new CountDownLatch(1);
+            CyclicBarrier barrier = new CyclicBarrier(2);
+            CountDownLatch threadDone = new CountDownLatch(1);
+
+            AssertSubscriber<Integer> sub = AssertSubscriber.create(Long.MAX_VALUE);
+            TubeConfiguration configuration = new TubeConfiguration().withBackpressureStrategy(BackpressureStrategy.DROP);
+            ZeroPublisher.<Integer> create(configuration, tube -> {
+                new Thread(() -> {
+                    tube.whenTerminates(terminationCount::incrementAndGet);
+                    tube.send(1);
+                    tubeReady.countDown();
+                    try {
+                        barrier.await(5, TimeUnit.SECONDS);
+                    } catch (Exception e) {
+                        Thread.currentThread().interrupt();
+                    }
+                    tube.complete();
+                    threadDone.countDown();
+                }).start();
+            }).subscribe(sub);
+
+            assertTrue(tubeReady.await(5, TimeUnit.SECONDS));
+            barrier.await(5, TimeUnit.SECONDS);
+            sub.cancel();
+            assertTrue(threadDone.await(5, TimeUnit.SECONDS));
+
+            assertThat(terminationCount).hasValue(1);
+        }
+
+        @RepeatedTest(100)
+        @DisplayName("cancellationAction must be called at most once when send() races with cancel()")
+        void cancellationActionCalledAtMostOnceOnSendVsCancel() throws Exception {
+            AtomicInteger cancellationCount = new AtomicInteger();
+            CountDownLatch tubeReady = new CountDownLatch(1);
+            CyclicBarrier barrier = new CyclicBarrier(2);
+            CountDownLatch threadDone = new CountDownLatch(1);
+
+            AssertSubscriber<Integer> sub = AssertSubscriber.create(Long.MAX_VALUE);
+            TubeConfiguration configuration = new TubeConfiguration().withBackpressureStrategy(BackpressureStrategy.DROP);
+            ZeroPublisher.<Integer> create(configuration, tube -> {
+                new Thread(() -> {
+                    tube.whenCancelled(cancellationCount::incrementAndGet);
+                    tube.send(1);
+                    tubeReady.countDown();
+                    try {
+                        barrier.await(5, TimeUnit.SECONDS);
+                    } catch (Exception e) {
+                        Thread.currentThread().interrupt();
+                    }
+                    for (int i = 0; i < 100; i++) {
+                        tube.send(i);
+                    }
+                    threadDone.countDown();
+                }).start();
+            }).subscribe(sub);
+
+            assertTrue(tubeReady.await(5, TimeUnit.SECONDS));
+            barrier.await(5, TimeUnit.SECONDS);
+            sub.cancel();
+            assertTrue(threadDone.await(5, TimeUnit.SECONDS));
+
+            assertThat(cancellationCount).hasValueLessThanOrEqualTo(1);
         }
     }
 }

@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.Flow;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Predicate;
 
 import org.junit.jupiter.api.DisplayName;
@@ -100,5 +102,42 @@ class RetryTest {
         NullPointerException exception = assertThrows(NullPointerException.class,
                 () -> new Retry<>(ZeroPublisher.empty(), null));
         assertEquals("The retry predicate cannot be null", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("onSubscribe must be called exactly once even with retries (spec rule 2.12)")
+    void onSubscribeCalledExactlyOnce() {
+        Flow.Publisher<String> source = ZeroPublisher.fromFailure(new IOException("boom"));
+        Retry<String> operator = new Retry<>(source, Retry.atMost(3));
+
+        AtomicInteger onSubscribeCount = new AtomicInteger();
+        AtomicReference<Throwable> receivedError = new AtomicReference<>();
+
+        operator.subscribe(new Flow.Subscriber<String>() {
+            @Override
+            public void onSubscribe(Flow.Subscription s) {
+                onSubscribeCount.incrementAndGet();
+                s.request(Long.MAX_VALUE);
+            }
+
+            @Override
+            public void onNext(String item) {
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                receivedError.set(throwable);
+            }
+
+            @Override
+            public void onComplete() {
+            }
+        });
+
+        assertEquals(1, onSubscribeCount.get(),
+                "onSubscribe must be called exactly once, but was called " + onSubscribeCount.get() + " times");
+        assertNotNull(receivedError.get());
+        assertInstanceOf(IOException.class, receivedError.get());
+        assertEquals("boom", receivedError.get().getMessage());
     }
 }

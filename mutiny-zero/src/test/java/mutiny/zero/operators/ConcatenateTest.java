@@ -1,13 +1,21 @@
 package mutiny.zero.operators;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.Flow;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
 import io.smallrye.mutiny.helpers.test.AssertSubscriber;
@@ -87,5 +95,121 @@ class ConcatenateTest {
         list.add(ZeroPublisher.empty());
         list.add(null);
         assertThrows(NullPointerException.class, () -> new Concatenate<>(list));
+    }
+
+    @Test
+    @DisplayName("No error when cancel races with request during publisher transition")
+    void cancelRacingWithRequestDuringTransition() throws InterruptedException {
+        CountDownLatch inOnNext = new CountDownLatch(1);
+        CountDownLatch cancelDone = new CountDownLatch(1);
+        AtomicReference<Throwable> spuriousError = new AtomicReference<>();
+
+        Flow.Publisher<Integer> asyncSource = subscriber -> subscriber.onSubscribe(new Flow.Subscription() {
+            @Override
+            public void request(long n) {
+                new Thread(() -> {
+                    subscriber.onNext(1);
+                    inOnNext.countDown();
+                    try {
+                        cancelDone.await(5, TimeUnit.SECONDS);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
+                    subscriber.onNext(2);
+                    subscriber.onComplete();
+                }).start();
+            }
+
+            @Override
+            public void cancel() {
+            }
+        });
+
+        Concatenate<Integer> stream = new Concatenate<>(List.of(asyncSource, ZeroPublisher.fromItems(3)));
+
+        AtomicReference<Flow.Subscription> subscriptionRef = new AtomicReference<>();
+
+        stream.subscribe(new Flow.Subscriber<Integer>() {
+            @Override
+            public void onSubscribe(Flow.Subscription s) {
+                subscriptionRef.set(s);
+                s.request(Long.MAX_VALUE);
+            }
+
+            @Override
+            public void onNext(Integer item) {
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                spuriousError.compareAndSet(null, throwable);
+            }
+
+            @Override
+            public void onComplete() {
+            }
+        });
+
+        assertTrue(inOnNext.await(5, TimeUnit.SECONDS));
+        subscriptionRef.get().cancel();
+        cancelDone.countDown();
+
+        Thread.sleep(200);
+
+        Throwable caught = spuriousError.get();
+        assertTrue(caught == null,
+                "Subscriber must not receive an error after cancel, but got: " + caught);
+    }
+
+    @RepeatedTest(100)
+    @DisplayName("No demand double-counting during publisher transition")
+    void noDemandDoubleCountingDuringTransition() throws Exception {
+        AtomicLong secondPublisherDemand = new AtomicLong();
+        CyclicBarrier barrier = new CyclicBarrier(2);
+
+        Flow.Publisher<Integer> first = subscriber -> subscriber.onSubscribe(new Flow.Subscription() {
+            @Override
+            public void request(long n) {
+                new Thread(() -> {
+                    try {
+                        barrier.await(5, TimeUnit.SECONDS);
+                    } catch (Exception e) {
+                        Thread.currentThread().interrupt();
+                    }
+                    subscriber.onComplete();
+                }).start();
+            }
+
+            @Override
+            public void cancel() {
+            }
+        });
+
+        Flow.Publisher<Integer> second = subscriber -> subscriber.onSubscribe(new Flow.Subscription() {
+            @Override
+            public void request(long n) {
+                secondPublisherDemand.addAndGet(n);
+                for (long i = 0; i < n && i < 10; i++) {
+                    subscriber.onNext((int) i);
+                }
+                subscriber.onComplete();
+            }
+
+            @Override
+            public void cancel() {
+            }
+        });
+
+        AssertSubscriber<Object> sub = AssertSubscriber.create();
+        Concatenate<Integer> stream = new Concatenate<>(List.of(first, second));
+        stream.subscribe(sub);
+
+        sub.request(5);
+        barrier.await(5, TimeUnit.SECONDS);
+        sub.awaitCompletion(Duration.ofSeconds(5));
+
+        sub.assertCompleted();
+        assertTrue(secondPublisherDemand.get() <= 5,
+                "Second publisher received " + secondPublisherDemand.get() + " demand but only 5 was requested");
     }
 }

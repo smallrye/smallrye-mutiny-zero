@@ -47,13 +47,23 @@ public class Concatenate<T> implements Flow.Publisher<T> {
 
     private class Processor implements Flow.Processor<T, T>, Flow.Subscription {
         private Flow.@Nullable Subscriber<? super T> downstream;
-        private Flow.@Nullable Subscription upstreamSubscription;
+        private volatile Flow.@Nullable Subscription upstreamSubscription;
 
         private final AtomicBoolean cancelled = new AtomicBoolean();
         private final AtomicLong demand = new AtomicLong();
         private volatile boolean unboundedDemand;
         private boolean downstreamIsReady;
         private final Iterator<Flow.Publisher<T>> publisherIterator = publishers.iterator();
+
+        private static final Flow.Subscription TRANSITIONING = new Flow.Subscription() {
+            @Override
+            public void request(long n) {
+            }
+
+            @Override
+            public void cancel() {
+            }
+        };
 
         @Override
         public void subscribe(Flow.Subscriber<? super T> subscriber) {
@@ -63,6 +73,7 @@ public class Concatenate<T> implements Flow.Publisher<T> {
 
         private void subscribeNext() {
             if (publisherIterator.hasNext()) {
+                upstreamSubscription = TRANSITIONING;
                 Flow.Publisher<T> publisher = publisherIterator.next();
                 publisher.subscribe(this);
             } else {
@@ -76,13 +87,14 @@ public class Concatenate<T> implements Flow.Publisher<T> {
             if (cancelled.get()) {
                 return;
             }
-            this.upstreamSubscription = subscription;
             if (downstreamIsReady) {
-                long n = demand.get();
+                long n = unboundedDemand ? Long.MAX_VALUE : demand.get();
+                this.upstreamSubscription = subscription;
                 if (n > 0L) {
-                    this.upstreamSubscription.request(n);
+                    subscription.request(n);
                 }
             } else {
+                this.upstreamSubscription = subscription;
                 downstreamIsReady = true;
                 assert downstream != null;
                 downstream.onSubscribe(this);
@@ -128,7 +140,6 @@ public class Concatenate<T> implements Flow.Publisher<T> {
                 if (n == Long.MAX_VALUE) {
                     unboundedDemand = true;
                 }
-                assert upstreamSubscription != null;
                 upstreamSubscription.request(n);
             }
         }
@@ -138,7 +149,6 @@ public class Concatenate<T> implements Flow.Publisher<T> {
             if (cancelled.compareAndSet(false, true)) {
                 assert upstreamSubscription != null;
                 upstreamSubscription.cancel();
-                upstreamSubscription = null;
             }
         }
     }

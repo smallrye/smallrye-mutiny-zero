@@ -21,11 +21,8 @@ public abstract class BufferingTubeBase<T> extends TubeBase<T> {
         if (n <= 0L) {
             fail(Helper.negativeRequest(n));
         } else {
-
-            if (overflowQueue().isEmpty()) {
-                super.request(n);
-                return;
-            }
+            Helper.add(requested, n);
+            requestConsumer.accept(n);
 
             long remaining = n;
             T bufferedItem;
@@ -37,10 +34,9 @@ public abstract class BufferingTubeBase<T> extends TubeBase<T> {
                 }
             } while (bufferedItem != null && remaining > 0L);
 
-            Helper.add(requested, n);
-            requestConsumer.accept(n);
-
-            completed = delayedComplete && overflowQueue().isEmpty();
+            if (!completed) {
+                completed = delayedComplete && overflowQueue().isEmpty();
+            }
         }
 
         drainLoop();

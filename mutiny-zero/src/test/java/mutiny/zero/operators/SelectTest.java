@@ -1,8 +1,14 @@
 package mutiny.zero.operators;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.awaitility.Awaitility.await;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Flow;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -65,5 +71,71 @@ class SelectTest {
         operator.subscribe(sub);
 
         sub.assertFailedWith(RuntimeException.class, "yolo");
+    }
+
+    @Test
+    @DisplayName("No error when cancel races with onNext on a rejecting predicate")
+    void cancelRacingWithOnNextOnRejectingPredicate() throws InterruptedException {
+        CountDownLatch inPredicate = new CountDownLatch(1);
+        CountDownLatch cancelDone = new CountDownLatch(1);
+        AtomicReference<Throwable> spuriousError = new AtomicReference<>();
+        AtomicBoolean onNextDone = new AtomicBoolean();
+
+        Flow.Publisher<Integer> source = subscriber -> subscriber.onSubscribe(new Flow.Subscription() {
+            @Override
+            public void request(long n) {
+                new Thread(() -> {
+                    subscriber.onNext(1);
+                    onNextDone.set(true);
+                }).start();
+            }
+
+            @Override
+            public void cancel() {
+            }
+        });
+
+        Select<Integer> operator = new Select<>(source, n -> {
+            inPredicate.countDown();
+            try {
+                cancelDone.await(5, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+            return false;
+        });
+
+        AtomicReference<Flow.Subscription> subscriptionRef = new AtomicReference<>();
+
+        operator.subscribe(new Flow.Subscriber<Integer>() {
+            @Override
+            public void onSubscribe(Flow.Subscription s) {
+                subscriptionRef.set(s);
+                s.request(Long.MAX_VALUE);
+            }
+
+            @Override
+            public void onNext(Integer item) {
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                spuriousError.compareAndSet(null, throwable);
+            }
+
+            @Override
+            public void onComplete() {
+            }
+        });
+
+        assertTrue(inPredicate.await(5, TimeUnit.SECONDS));
+        subscriptionRef.get().cancel();
+        cancelDone.countDown();
+
+        await().untilTrue(onNextDone);
+
+        Throwable caught = spuriousError.get();
+        assertTrue(caught == null,
+                "Subscriber must not receive an error after cancel, but got: " + caught);
     }
 }
