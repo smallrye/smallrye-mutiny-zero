@@ -940,6 +940,38 @@ class ZeroPublisherTest {
             sub.awaitCompletion(Duration.ofSeconds(5));
             sub.assertCompleted().assertItems(1);
         }
+
+        @RepeatedTest(10)
+        @DisplayName("BUFFER tube: demand not lost when request(1) races with concurrent multi-item producer")
+        void demandNotLostUnderConcurrentProducerAndBoundedRequest() throws Exception {
+            CyclicBarrier barrier = new CyclicBarrier(2);
+            AssertSubscriber<Integer> sub = AssertSubscriber.create();
+            TubeConfiguration configuration = new TubeConfiguration()
+                    .withBackpressureStrategy(BackpressureStrategy.BUFFER)
+                    .withBufferSize(256);
+            ZeroPublisher.<Integer> create(configuration, tube -> {
+                new Thread(() -> {
+                    try {
+                        for (int i = 0; i < 3; i++) {
+                            barrier.await(5, TimeUnit.SECONDS);
+                            tube.send(i);
+                        }
+                        tube.complete();
+                    } catch (Exception e) {
+                        Thread.currentThread().interrupt();
+                    }
+                }).start();
+            }).subscribe(sub);
+
+            for (int i = 0; i < 3; i++) {
+                final int expected = i;
+                barrier.await(5, TimeUnit.SECONDS);
+                sub.request(1);
+                await().atMost(Duration.ofSeconds(5)).until(() -> sub.getItems().size() > expected);
+            }
+            sub.awaitCompletion(Duration.ofSeconds(5));
+            sub.assertCompleted().assertItems(0, 1, 2);
+        }
     }
 
     @Nested

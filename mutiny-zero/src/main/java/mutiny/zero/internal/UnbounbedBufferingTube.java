@@ -20,11 +20,7 @@ public class UnbounbedBufferingTube<T> extends BufferingTubeBase<T> {
 
     @Override
     protected void handleItem(T item) {
-        if (outstandingRequests() > 0L) {
-            dispatchQueue.offer(item);
-            drainLoop();
-        } else {
-            overflowQueue.offer(item);
-        }
+        overflowQueue.offer(item);
+        drainLoop();
     }
 }

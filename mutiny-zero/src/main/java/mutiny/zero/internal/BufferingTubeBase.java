@@ -5,7 +5,7 @@ import java.util.concurrent.Flow;
 
 public abstract class BufferingTubeBase<T> extends TubeBase<T> {
 
-    protected boolean delayedComplete = false;
+    protected volatile boolean delayedComplete = false;
 
     public BufferingTubeBase(Flow.Subscriber<? super T> subscriber) {
         super(subscriber);
@@ -23,23 +23,28 @@ public abstract class BufferingTubeBase<T> extends TubeBase<T> {
         } else {
             Helper.add(requested, n);
             requestConsumer.accept(n);
-
-            long remaining = n;
-            T bufferedItem;
-            do {
-                bufferedItem = overflowQueue().poll();
-                if (bufferedItem != null) {
-                    dispatchQueue.offer(bufferedItem);
-                    remaining--;
-                }
-            } while (bufferedItem != null && remaining > 0L);
-
-            if (!completed) {
-                completed = delayedComplete && overflowQueue().isEmpty();
-            }
         }
-
         drainLoop();
+    }
+
+    @Override
+    protected void drainOverflow() {
+        long remaining = outstandingRequests();
+        if (remaining <= 0L) {
+            return;
+        }
+        T bufferedItem;
+        do {
+            bufferedItem = overflowQueue().poll();
+            if (bufferedItem != null) {
+                dispatchQueue.offer(bufferedItem);
+                remaining--;
+            }
+        } while (bufferedItem != null && remaining > 0L);
+
+        if (!completed && delayedComplete && overflowQueue().isEmpty()) {
+            completed = true;
+        }
     }
 
     @Override

@@ -20,13 +20,12 @@ public class BufferingTube<T> extends BufferingTubeBase<T> {
 
     @Override
     protected void handleItem(T item) {
-        if (outstandingRequests() > 0L) {
-            dispatchQueue.offer(item);
-            drainLoop();
-        } else if (!overflowQueue.offer(item)) {
+        if (!overflowQueue.offer(item)) {
             fail(new IllegalStateException(
                     "The following item cannot be propagated because there is no demand and the overflow buffer is full: "
                             + item));
+            return;
         }
+        drainLoop();
     }
 }
