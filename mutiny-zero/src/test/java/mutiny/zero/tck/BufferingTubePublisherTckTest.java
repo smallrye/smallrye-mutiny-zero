@@ -9,9 +9,9 @@ import mutiny.zero.BackpressureStrategy;
 import mutiny.zero.TubeConfiguration;
 import mutiny.zero.ZeroPublisher;
 
-public class BufferringTubePublisherTckTest extends FlowPublisherVerification<Long> {
+public class BufferingTubePublisherTckTest extends FlowPublisherVerification<Long> {
 
-    public BufferringTubePublisherTckTest() {
+    public BufferingTubePublisherTckTest() {
         super(new TestEnvironment());
     }
 

@@ -151,6 +151,10 @@ public abstract class TubeBase<T> implements Tube<T>, Subscription {
 
     protected abstract void handleItem(T item);
 
+    protected void drainOverflow() {
+        // no-op; overridden by buffering tubes to transfer overflow → dispatchQueue
+    }
+
     protected void drainLoop() {
         if (wip.getAndIncrement() != 0) {
             // Another tread is working
@@ -160,6 +164,7 @@ public abstract class TubeBase<T> implements Tube<T>, Subscription {
         int missed = 1;
         Queue<T> queue = dispatchQueue;
         while (missed != 0) {
+            drainOverflow();
             long emitted = 0L;
             long pending = outstandingRequests();
 
