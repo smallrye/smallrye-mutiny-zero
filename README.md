@@ -5,7 +5,7 @@
 
 Mutiny Zero is a minimal API for creating [reactive-streams](https://www.reactive-streams.org) compliant publishers.
 
-See [https://smallrye.io/smallrye-mutiny-zero/](https://smallrye.io/smallrye-mutiny-zero/) for the documentation.
+See [https://smallrye.io/docs/smallrye-mutiny-zero/latest/](https://smallrye.io/docs/smallrye-mutiny-zero/latest/) for the documentation.
 
 ## 📦 Build instructions
 
